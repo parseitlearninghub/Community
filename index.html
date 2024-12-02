@@ -1,40 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Community</title>
-    <link rel="stylesheet" href="community.css">
+    <link rel="stylesheet" href="community.css" />
     <script defer src="community.js"></script>
-</head>
-<body>
-
+  </head>
+  <body>
     <!-- Overlay -->
     <div id="overlay"></div>
 
     <!-- Feeds Section -->
     <div class="feeds">
-        <!-- Post Query Header -->
-        <div class="post-query-header">
-            <div class="message_icon">
-                <img src="home.png" alt="">
-                <img src="message.png" alt="">
-            </div>
-            <div class="subheader">
-                <div class="top-profile-pic">
-                    <img src="profile-pic.jpg" alt="Profile Picture">
-                </div>
-                <div class="text">
-                    <span>Have a question? </span>
-                </div>
-                <button class="btn" id="postbtn" onclick="openModal()">Post A Query</button>
-            </div>    
+      <!-- Post Query Header -->
+      <div class="post-query-header">
+        <div class="message_icon">
+          <img src="home.png" alt="" />
+          <img src="message.png" alt="" id="home_btn" />
         </div>
+        <div class="subheader">
+          <div class="top-profile-pic">
+            <img src="profile-pic.jpg" alt="Profile Picture" />
+          </div>
+          <div class="text">
+            <span>Have a question? </span>
+          </div>
+          <button class="btn" id="postbtn" onclick="openModal()">
+            Post A Query
+          </button>
+        </div>
+      </div>
 
-        <!-- Feed Posts Container -->
-        <div id="feedContainer">
-            <!-- Existing Feed Posts can be placed here -->
-            <!-- <div class="feed">
+      <!-- Feed Posts Container -->
+      <div id="feedContainer">
+        <!-- Existing Feed Posts can be placed here -->
+        <!-- <div class="feed">
                 <div class="user">
                     <div class="profile-pic">
                         <img src="profile-pic.jpg" alt="User Picture">
@@ -52,37 +53,45 @@
                     <<small>Like</small>
                 </div>
             </div> -->
-        </div>
+      </div>
     </div>
 
     <!-- Post Query Modal -->
     <div class="query-modal" id="queryModal">
-        <button class="query-close-button" onclick="closeModal()">&times;</button>
-        <h2>Post Your Query</h2>
-        <label for="queryTitle">Title</label>
-        <input type="text" id="queryTitle" placeholder="Enter the title of your query">
-        
-        <label for="queryDescription">Description</label>
-        <textarea id="queryDescription" placeholder="Describe your query in detail"></textarea>
-        
-        <button id="post_query_btn">Post Query</button>
+      <button class="query-close-button" onclick="closeModal()">&times;</button>
+      <h2>Post Your Query</h2>
+      <label for="queryTitle">Title</label>
+      <input
+        type="text"
+        id="queryTitle"
+        placeholder="Enter the title of your query"
+      />
+
+      <label for="queryDescription">Description</label>
+      <textarea
+        id="queryDescription"
+        placeholder="Describe your query in detail"
+      ></textarea>
+
+      <button id="post_query_btn">Post Query</button>
     </div>
 
     <!-- Answers/Comments Modal -->
     <div class="answers-modal" id="answersModal">
-        <button class="answers-close-button" onclick="closeAnswersModal()">&times;</button>
-        <h2>Answers</h2>
-        <div class="modal-body">
-            <!-- <p><strong>User1:</strong> This is a sample comment.</p>
+      <button class="answers-close-button" onclick="closeAnswersModal()">
+        &times;
+      </button>
+      <h2>Answers</h2>
+      <div class="modal-body">
+        <!-- <p><strong>User1:</strong> This is a sample comment.</p>
             <p><strong>User2:</strong> Another comment example.</p> -->
-        </div>
-        <label for="newComment">Add an answer</label>
-        <textarea id="newComment" placeholder="Write your answer here"></textarea>
-        
-        <button id="answer_btn" class="btn"  >Post Answer</button>
+      </div>
+      <label for="newComment">Add an answer</label>
+      <textarea id="newComment" placeholder="Write your answer here"></textarea>
+
+      <button id="answer_btn" class="btn">Post Answer</button>
     </div>
 
-    
-<script type="module" src="database.js"></script>
-</body>
+    <script type="module" src="database.js"></script>
+  </body>
 </html>
