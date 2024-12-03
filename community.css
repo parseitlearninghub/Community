@@ -272,7 +272,7 @@ label {
     margin-bottom: 0.5rem;
 }
 
-input[type="text"],
+/* input[type="text"],
 textarea {
     width: 100%;
     padding: 0.2rem;
@@ -280,10 +280,10 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 14px;
-}
+} */
 
 textarea {
-    height: 40px;
+    height: 120px;
     resize: none;
 }
 
