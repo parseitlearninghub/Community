@@ -46,22 +46,9 @@ img {
     width: 100%;
 }
 
-/* .btn {
-    padding: 0.6rem 2rem;
-    border-radius: 2rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-    background: #EB3434;
-    color: white;
-    text-align: center;
-    transition: all 300ms ease;
-    border: none;
-    
+#back_btn {
+    margin-right: 30px;
 }
-
-.btn:hover {
-    opacity: 0.8;
-} */
 
 /* Feeds Section */
 .feeds {
