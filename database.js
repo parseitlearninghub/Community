@@ -127,6 +127,13 @@ function loadPosts() {
                   <strong class="username">${post.username}</strong><br>
                   <small class="time-posted">${posts[postId].time}</small>
               </div>
+               <div class="menu-icon" onclick="toggleMenu(this)">
+          &#8942; 
+          <div class="menu-options">
+              <div class="menu-item" onclick="editPost('${postId}')">Edit</div>
+              <div class="menu-item" onclick="reportPost('${postId}')">Report</div>
+          </div>
+      </div>
           </div>
           <div class="post">
               <p>${post.description}</p>
@@ -156,7 +163,6 @@ document.addEventListener("DOMContentLoaded", function () {
 function getCurrentTime() {
   const now = new Date();
   
-  // Define an array of month names
   const monthNames = [
     "January", "February", "March", "April", "May", "June", 
     "July", "August", "September", "October", "November", "December"
@@ -179,12 +185,9 @@ function getCurrentTime() {
 
 console.log("Active Post ID:", active_post_id);
 console.log("Answers being loaded for Post ID:", postId);
-//console.log(getCurrentTime());
-// Post a comment to the active feed
-//console.log("Active Post ID:", localStorage.getItem("active_post_id"));
 function postComment(student_id, username, content) {
   const answer_id = Date.now().toString();
-  const active_post = localStorage.getItem("active_post_id"); // Retrieve the active post ID
+  const active_post = localStorage.getItem("active_post_id");
   update(ref(database, `PARSEIT/community/posts/${active_post}/answers/${answer_id}`), {
       student_id: student_id,
       content: content,
@@ -211,9 +214,9 @@ function addAnswer() {
   }
 
   postComment(student_id, localStorage.getItem("student_username"), content);
-  document.getElementById("newComment").value = ""; // Clear input field
+  document.getElementById("newComment").value = "";
   const active_post_id = localStorage.getItem("active_post_id");
-  loadAnswers(active_post_id); // Reload answers to include the new one
+  loadAnswers(active_post_id); 
 }
 
 localStorage.getItem("active_post_id")
@@ -225,13 +228,10 @@ async function getUsername(student_id) {
     if (snapshot.exists()) {
       const posts = snapshot.val();
 
-      // Clear the feed container
       feedContainer.innerHTML = "";
 
-      // Loop through each post and render it
       Object.keys(posts).forEach((postId) => {
         const post = posts[postId];
-        // return console.log(posts[postId]);
         if (post === student_id) {
           return localStorage.setItem("active_username", postId);
 
@@ -256,7 +256,7 @@ function loadAnswers(postId) {
   get(answersRef)
       .then((snapshot) => {
           const modalBody = document.querySelector(".answers-modal .modal-body");
-          modalBody.innerHTML = ""; // Clear previous answers
+          modalBody.innerHTML = ""; 
 
           if (snapshot.exists()) {
               const answers = snapshot.val();
@@ -281,4 +281,37 @@ function loadAnswers(postId) {
       });
 }
 
+// Edit Post Functionality
+function editPost(postId) {
+  const newDescription = prompt("Edit your post:");
+  if (newDescription !== null && newDescription.trim() !== "") {
+      update(ref(database, `PARSEIT/community/posts/${postId}`), {
+          description: newDescription,
+      })
+          .then(() => {
+              alert("Post updated successfully!");
+              loadPosts(); // Reload posts
+          })
+          .catch((error) => {
+              console.error("Error updating post:", error);
+              alert("Failed to update the post.");
+          });
+  }
+}
+
+// Report Post Functionality
+function reportPost(postId) {
+  if (confirm("Are you sure you want to report this post?")) {
+      update(ref(database, `PARSEIT/community/posts/${postId}`), {
+          reported: true, // Add a 'reported' flag
+      })
+          .then(() => {
+              alert("Post reported successfully.");
+          })
+          .catch((error) => {
+              console.error("Error reporting post:", error);
+              alert("Failed to report the post.");
+          });
+  }
+}
 

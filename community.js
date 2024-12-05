@@ -17,13 +17,12 @@ function closeModal() {
     queryModal.classList.remove("active");
 }
 
-// Open the answers modal and display comments for the selected feed
 function openAnswersModal(feedElement, active_post_id) {
   localStorage.setItem("active_post_id", active_post_id);
   overlay.classList.add("active");
   answersModal.classList.add("active");
-  activeFeed = feedElement; // Set the current feed as active
-  loadAnswers(active_post_id); // Load answers for this specific post
+  activeFeed = feedElement; 
+  loadAnswers(active_post_id);
 }
 
 
@@ -36,16 +35,6 @@ function closeAnswersModal() {
     activeFeed = null;
 }
 
-// Update the "View Comments" text dynamically
-function updateCommentCount(feedElement) {
-    const commentsContainer = feedElement.querySelector(".comments");
-    const commentCount = commentsContainer.children.length;
-    const viewCommentsElement = feedElement.querySelector(".view-comments");
-
-    viewCommentsElement.textContent = `${commentCount} ${commentCount === 1 ? "Comment" : "Comments"}`;
-}
-
-
 overlay.addEventListener("click", () => {
     closeModal();
     closeAnswersModal();
@@ -53,3 +42,26 @@ overlay.addEventListener("click", () => {
 
 closeModalBtn.addEventListener("click", closeModal);
 closeAnswersBtn.addEventListener("click", closeAnswersModal);
+
+function toggleMenu(menuElement) {
+  // Close any open menus
+  const allMenus = document.querySelectorAll('.menu-icon');
+  allMenus.forEach((menu) => {
+      if (menu !== menuElement) {
+          menu.classList.remove('active');
+      }
+  });
+
+  // Toggle the active state for the clicked menu
+  menuElement.classList.toggle('active');
+}
+
+// Close the menu when clicking outside
+document.addEventListener('click', (event) => {
+  const allMenus = document.querySelectorAll('.menu-icon');
+  allMenus.forEach((menu) => {
+      if (!menu.contains(event.target)) {
+          menu.classList.remove('active');
+      }
+  });
+});
