@@ -31,13 +31,28 @@ const database = getDatabase(app);
 const dbRef = ref(database);
 getParser(localStorage.getItem("user-parser"));
 
+//for reload purposes
+document.getElementById("home_btn").addEventListener("click", function () {
+  location.reload();
+});
+
 document.getElementById("post_query_btn").addEventListener("click", function () {
   const student_id = localStorage.getItem("user-parser")
   const time = getCurrentTime();
   const post_id = Date.now().toString();
   const description = document.getElementById("queryDescription").value;
+  if (description.trim() === "") {
+    alert("Query description cannot be empty.");
+    return;
+  }
+
   submitQuery(localStorage.getItem("student_username"), time, description, post_id, student_id);
- })
+
+  // Clear the input field and close the modal after posting
+  document.getElementById("queryDescription").value = ""; 
+  closeModal(); // Call this function to close the query modal
+
+})
 async function getParser(student_id) {
   const postsRef = ref(database, `PARSEIT/username/`);
 
@@ -147,25 +162,27 @@ function getCurrentTime() {
   const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
   return `${formattedHours}:${formattedMinutes} ${ampm}`;
 }
-  
+console.log("Active Post ID:", active_post_id);
+console.log("Answers being loaded for Post ID:", postId);
 //console.log(getCurrentTime());
 // Post a comment to the active feed
 //console.log("Active Post ID:", localStorage.getItem("active_post_id"));
 function postComment(student_id, username, content) {
   const answer_id = Date.now().toString();
-  const active_post = localStorage.getItem("active_post_id");
+  const active_post = localStorage.getItem("active_post_id"); // Retrieve the active post ID
   update(ref(database, `PARSEIT/community/posts/${active_post}/answers/${answer_id}`), {
-    student_id: student_id,
-    content: content,
-    username: username,
-    time: getCurrentTime(),
+      student_id: student_id,
+      content: content,
+      username: username,
+      time: getCurrentTime(),
   })
-    .then(() => console.log("Answer posted successfully"))
-    .catch((error) => {
-      console.error("Error posting answer:", error);
-      alert("Failed to post answer. Please try again.");
-    });
+      .then(() => console.log("Answer posted successfully"))
+      .catch((error) => {
+          console.error("Error posting answer:", error);
+          alert("Failed to post answer. Please try again.");
+      });
 }
+
 
 document.getElementById("answer_btn").addEventListener("click", function () {
   addAnswer();
@@ -209,7 +226,44 @@ async function getUsername(student_id) {
   });
 }
 
-//for reload purposes
-document.getElementById("home_btn").addEventListener("click", function () {
-  location.reload();
-});
+
+
+function loadAnswers(postId) {
+
+  const active_post_id = localStorage.getItem("active_post_id");
+
+  if (!active_post_id) {
+      console.error("No active post ID found in localStorage.");
+      return;
+  }
+  const answersRef = ref(database, `PARSEIT/community/posts/${postId}/answers/`);
+
+  get(answersRef)
+      .then((snapshot) => {
+          const modalBody = document.querySelector(".answers-modal .modal-body");
+          modalBody.innerHTML = ""; // Clear previous answers
+
+          if (snapshot.exists()) {
+              const answers = snapshot.val();
+              Object.keys(answers).forEach((answerId) => {
+                  const answer = answers[answerId];
+                  const answerElement = document.createElement("div");
+                  answerElement.classList.add("answer");
+                  answerElement.innerHTML = `
+                      <div class="answer-header">
+                          <strong>${answer.username}</strong> <small>${answer.time}</small>
+                      </div>
+                      <p>${answer.content}</p>
+                  `;
+                  modalBody.appendChild(answerElement);
+              });
+          } else {
+              modalBody.innerHTML = "<p>No answers yet. Be the first to answer!</p>";
+          }
+      })
+      .catch((error) => {
+          console.error("Error loading answers:", error);
+      });
+}
+
+
