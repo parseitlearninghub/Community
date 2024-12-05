@@ -270,6 +270,8 @@ textarea {
     resize: none;
 }
 
+
+
 button {
     padding: 0.6rem 1rem;
     border: 2px solid black;
@@ -290,6 +292,7 @@ button:hover {
 
 .query-close-button, .close-button {
     position: absolute;
+    color: black;
     top: 10px;
     right: 10px;
     background: none;
@@ -335,12 +338,12 @@ button:hover {
     font-weight: bold;
 }
 
-.query-modal input[type="titletext"],
+/* .query-modal input[type="titletext"],
 .query-modal textarea {
     padding: 8px;
     font-size: 1rem;
     margin-bottom: 1rem;
-}
+} */
 
 /* Pop-up Modal for Answers Section */
 .answers-modal {
@@ -425,8 +428,18 @@ textarea {
     border-radius: 4px;
     font-size: 1rem;
     resize: none;
+    margin-bottom: 1rem;
 }
 
+textarea:focus {
+    background-color: transparent; 
+    border:  0.1rem solid #000000;             
+    outline: none;               
+}
+
+/* textarea #newComment {
+
+} */
 
 /* Responsive Layout */
 @media screen and (min-width: 768px) {
