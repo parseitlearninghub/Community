@@ -155,13 +155,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function getCurrentTime() {
   const now = new Date();
+  
+  // Define an array of month names
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June", 
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  // Get the current month name
+  const month = monthNames[now.getMonth()]; // Get month index and map to name
+  const day = String(now.getDate()).padStart(2, "0");
+  const year = now.getFullYear();
+
+  // Format the time
   const hours = now.getHours();
   const minutes = now.getMinutes();
   const ampm = hours >= 12 ? "PM" : "AM";
-  const formattedHours = hours % 12 || 12; 
-  const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
-  return `${formattedHours}:${formattedMinutes} ${ampm}`;
+  const formattedHours = hours % 12 || 12; // Convert 24-hour to 12-hour format
+  const formattedMinutes = String(minutes).padStart(2, "0");
+
+  return `${month} ${day}, ${year} ${formattedHours}:${formattedMinutes} ${ampm}`;
 }
+
 console.log("Active Post ID:", active_post_id);
 console.log("Answers being loaded for Post ID:", postId);
 //console.log(getCurrentTime());
