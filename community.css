@@ -206,7 +206,7 @@ img {
 .feed .post {
     margin-top: 1rem;
     font-size: 1rem;
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 
 .feed .post .post-title {
