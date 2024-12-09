@@ -31,17 +31,28 @@ const database = getDatabase(app);
 const dbRef = ref(database);
 getParser(localStorage.getItem("user-parser"));
 
+//for reload purposes
+document.getElementById("home_btn").addEventListener("click", function () {
+  location.reload();
+});
+
 document.getElementById("post_query_btn").addEventListener("click", function () {
   const student_id = localStorage.getItem("user-parser")
   const time = getCurrentTime();
   const post_id = Date.now().toString();
   const description = document.getElementById("queryDescription").value;
-  // const username = localStorage.getItem("student_username");
-  // console.log(username, time, description, post_id, student_id);
+  if (description.trim() === "") {
+    alert("Query description cannot be empty.");
+    return;
+  }
+
   submitQuery(localStorage.getItem("student_username"), time, description, post_id, student_id);
-  //console.log(username, time, title, description, post_id, student_id );
+
+  // Clear the input field and close the modal after posting
+  document.getElementById("queryDescription").value = ""; 
+  closeModal(); // Call this function to close the query modal
+
 })
-// console.log(getParser("7210706"));
 async function getParser(student_id) {
   const postsRef = ref(database, `PARSEIT/username/`);
 
@@ -52,8 +63,7 @@ async function getParser(student_id) {
       // Clear the feed container
       feedContainer.innerHTML = "";
 
-      // Loop through each post and render it
-      Object.keys(posts).forEach((postId) => {
+        Object.keys(posts).forEach((postId) => {
         const post = posts[postId];
 
         if (post === student_id) {
@@ -65,27 +75,20 @@ async function getParser(student_id) {
     }
   });
 }
-// Reference to the feed container in the DOM
 const feedContainer = document.getElementById("feedContainer");
 
-// Submit query and add to Firebase + display on the feed
-// Function to open/close the three-dot menu
 function openMenu(menuElement) {
-  // Find the corresponding menu for the clicked three dots
   const menu = menuElement.querySelector('.menu-options');
 
-  // Toggle the 'show' class to display or hide the menu
   if (menu.classList.contains('show')) {
     menu.classList.remove('show');
   } else {
-    // Close any other open menus before opening the new one
     const allMenus = document.querySelectorAll('.menu-options');
     allMenus.forEach((m) => m.classList.remove('show'));
     menu.classList.add('show');
   }
 }
 
-// Add the menu options in each post
 function submitQuery(username, time, description, post_id, student_id) {
 
   // Add the post to Firebase
@@ -107,11 +110,9 @@ function loadPosts() {
     if (snapshot.exists()) {
       const posts = snapshot.val();
 
-      // Clear the feed container
       feedContainer.innerHTML = "";
 
-      // Loop through each post and render it
-      Object.keys(posts).forEach((postId) => {
+     Object.keys(posts).forEach((postId) => {
         const post = posts[postId];
 
         const postElement = document.createElement("div");
@@ -126,12 +127,19 @@ function loadPosts() {
                   <strong class="username">${post.username}</strong><br>
                   <small class="time-posted">${posts[postId].time}</small>
               </div>
+               <div class="menu-icon" onclick="toggleMenu(this)">
+          &#8942; 
+          <div class="menu-options">
+              <div class="menu-item" onclick="editPost('${postId}')">Edit</div>
+              <div class="menu-item" onclick="reportPost('${postId}')">Report</div>
+          </div>
+      </div>
           </div>
           <div class="post">
               <p>${post.description}</p>
           </div>
           <div class="feed-footer">
-              <small class="view-comments" onclick="openAnswersModal(this.parentElement.parentElement, ${postId})"> Answer</small>
+              <small class="view-comments" onclick="openAnswersModal(this.parentElement.parentElement, '${postId}')"> Answer</small>
           </div>
           <div class="comments"></div> <!-- Comments container -->
         `;
@@ -147,54 +155,70 @@ function loadPosts() {
   });
 }
 
-// Call this function after the page has loaded
 document.addEventListener("DOMContentLoaded", function () {
   const student_id = localStorage.getItem("user-parser");
   loadPosts(student_id);
 });
-//localStorage.setItem("user-parser", "7210706");
 
 function getCurrentTime() {
   const now = new Date();
+  
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June", 
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  // Get the current month name
+  const month = monthNames[now.getMonth()]; // Get month index and map to name
+  const day = String(now.getDate()).padStart(2, "0");
+  const year = now.getFullYear();
+
+  // Format the time
   const hours = now.getHours();
   const minutes = now.getMinutes();
   const ampm = hours >= 12 ? "PM" : "AM";
-  const formattedHours = hours % 12 || 12; // Convert 0 to 12 for 12-hour format
-  const formattedMinutes = minutes < 10 ? "0" + minutes : minutes; // Add leading zero
-  return `${formattedHours}:${formattedMinutes} ${ampm}`;
+  const formattedHours = hours % 12 || 12; // Convert 24-hour to 12-hour format
+  const formattedMinutes = String(minutes).padStart(2, "0");
+
+  return `${month} ${day}, ${year} ${formattedHours}:${formattedMinutes} ${ampm}`;
 }
 
-// console.log(getUsername(localStorage.getItem("student_id")));
-// function displayComments(feedElement) {
-//   const commentsContainer = feedElement.querySelector(".comments");
-//   const modalBody = document.querySelector(".answers-modal .modal-body");
-//   modalBody.innerHTML = commentsContainer.innerHTML;
-// }
-console.log(getCurrentTime());
-// Post a comment to the active feed
+console.log("Active Post ID:", active_post_id);
+console.log("Answers being loaded for Post ID:", postId);
 function postComment(student_id, username, content) {
-  //const comment = document.getElementById("newComment").value;
   const answer_id = Date.now().toString();
   const active_post = localStorage.getItem("active_post_id");
   update(ref(database, `PARSEIT/community/posts/${active_post}/answers/${answer_id}`), {
-    student_id: student_id,
-    content: content,
-    username: username,
-    time: getCurrentTime(),
-  }).catch((error) => {
-    console.error("Error posting query:", error);
-    alert("Failed to post query. Please try again.");
-  });
+      student_id: student_id,
+      content: content,
+      username: username,
+      time: getCurrentTime(),
+  })
+      .then(() => console.log("Answer posted successfully"))
+      .catch((error) => {
+          console.error("Error posting answer:", error);
+          alert("Failed to post answer. Please try again.");
+      });
 }
+
+
 document.getElementById("answer_btn").addEventListener("click", function () {
   addAnswer();
 });
 function addAnswer() {
-  const student_id = localStorage.getItem("user-parser")
+  const student_id = localStorage.getItem("user-parser");
   const content = document.getElementById("newComment").value;
-  postComment(student_id, localStorage.getItem("student_username"), content)
+  if (content.trim() === "") {
+    alert("Answer cannot be empty.");
+    return;
+  }
 
+  postComment(student_id, localStorage.getItem("student_username"), content);
+  document.getElementById("newComment").value = "";
+  const active_post_id = localStorage.getItem("active_post_id");
+  loadAnswers(active_post_id); 
 }
+
 localStorage.getItem("active_post_id")
 
 async function getUsername(student_id) {
@@ -204,13 +228,10 @@ async function getUsername(student_id) {
     if (snapshot.exists()) {
       const posts = snapshot.val();
 
-      // Clear the feed container
       feedContainer.innerHTML = "";
 
-      // Loop through each post and render it
       Object.keys(posts).forEach((postId) => {
         const post = posts[postId];
-        // return console.log(posts[postId]);
         if (post === student_id) {
           return localStorage.setItem("active_username", postId);
 
@@ -220,7 +241,77 @@ async function getUsername(student_id) {
   });
 }
 
-//for reload purposes
-document.getElementById("home_btn").addEventListener("click", function () {
-  location.reload();
-});
+
+
+function loadAnswers(postId) {
+
+  const active_post_id = localStorage.getItem("active_post_id");
+
+  if (!active_post_id) {
+      console.error("No active post ID found in localStorage.");
+      return;
+  }
+  const answersRef = ref(database, `PARSEIT/community/posts/${postId}/answers/`);
+
+  get(answersRef)
+      .then((snapshot) => {
+          const modalBody = document.querySelector(".answers-modal .modal-body");
+          modalBody.innerHTML = ""; 
+
+          if (snapshot.exists()) {
+              const answers = snapshot.val();
+              Object.keys(answers).forEach((answerId) => {
+                  const answer = answers[answerId];
+                  const answerElement = document.createElement("div");
+                  answerElement.classList.add("answer");
+                  answerElement.innerHTML = `
+                      <div class="answer-header">
+                          <strong>${answer.username}</strong> <small>${answer.time}</small>
+                      </div>
+                      <p>${answer.content}</p>
+                  `;
+                  modalBody.appendChild(answerElement);
+              });
+          } else {
+              modalBody.innerHTML = "<p>No answers yet. Be the first to answer!</p>";
+          }
+      })
+      .catch((error) => {
+          console.error("Error loading answers:", error);
+      });
+}
+
+// Edit Post Functionality
+function editPost(postId) {
+  const newDescription = prompt("Edit your post:");
+  if (newDescription !== null && newDescription.trim() !== "") {
+      update(ref(database, `PARSEIT/community/posts/${postId}`), {
+          description: newDescription,
+      })
+          .then(() => {
+              alert("Post updated successfully!");
+              loadPosts(); // Reload posts
+          })
+          .catch((error) => {
+              console.error("Error updating post:", error);
+              alert("Failed to update the post.");
+          });
+  }
+}
+
+// Report Post Functionality
+function reportPost(postId) {
+  if (confirm("Are you sure you want to report this post?")) {
+      update(ref(database, `PARSEIT/community/posts/${postId}`), {
+          reported: true, // Add a 'reported' flag
+      })
+          .then(() => {
+              alert("Post reported successfully.");
+          })
+          .catch((error) => {
+              console.error("Error reporting post:", error);
+              alert("Failed to report the post.");
+          });
+  }
+}
+
