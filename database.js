@@ -32,7 +32,7 @@ const dbRef = ref(database);
 getParser(localStorage.getItem("user-parser"));
 
 //for reload purposes
-document.getElementById("home_btn").addEventListener("click", function () {
+document.getElementById("community_home_btn").addEventListener("click", function () {
   location.reload();
 });
 

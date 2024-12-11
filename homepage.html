@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homepage</title>
+    <link rel="stylesheet" href="homepage.css" />
+  </head>
+  <body>
+    <!-- Loading Animation -->
+    <div id="loading_animation_div">
+      <img id="loading_animation_gif" src="assets/loading_animation.gif" />
+      <h1 id="parsing_lbl">Parsing...</h1>
+    </div>
+    <div class="check_animation_div" id="check_animation_div">
+      <img src="assets/check-animation.gif" class="check-animation" />
+    </div>
+
+    <!-- Side Bar -->
+    <div class="sidebar_div" id="sidebar_div">
+      <div class="sidebar_frame" id="sidebar_frame">
+        <nav class="header_nav" id="sidebar_header">
+          <img id="parser_profile" src="" />
+          <span id="parser_username">@</span>
+        </nav>
+        <section class="body_section" id="sidebar_body">
+          <div class="side_options_wrapper" id="myProfile_btn">
+            <img class="sidebaroptions_img" src="assets/icons/person.svg" />
+            <span class="sidebar_options_lbl">Profile</span>
+          </div>
+          <div class="side_options_wrapper" id="myJourney_btn">
+            <img class="sidebaroptions_img" src="assets/icons/calendar.svg" />
+            <span class="sidebar_options_lbl">My Journey</span>
+          </div>
+          <div class="side_options_wrapper" id="community_btn">
+            <img
+              class="sidebaroptions_img"
+              src="assets/icons/users-solid.svg"
+            />
+            <span class="sidebar_options_lbl">Community</span>
+          </div>
+          <div class="side_options_wrapper" id="community_btn">
+            <img class="sidebaroptions_img" src="assets/icons/gear-solid.svg" />
+            <span class="sidebar_options_lbl">Settings</span>
+          </div>
+        </section>
+        <footer class="footer_nav" id="sidebar_footer">
+          <span class="reloadpage" id="reloadpage">Reload Page</span>
+          <img src="assets/icons/log-out-outline.svg" alt="" id="logout_btn" />
+        </footer>
+      </div>
+    </div>
+
+    <!-- Announcements -->
+    <div class="allannouncement-div" id="allannouncement-div">
+      <div class="allannouncement-frame">
+        <div class="allannouncement-header">
+          <span class="allannouncement-header-lbl">All Announcements</span>
+        </div>
+        <div class="allannouncement-body" id="allannouncement-body"></div>
+      </div>
+    </div>
+
+    <!-- Homepage -->
+    <div class="popupDefault" id="homepage_div">
+      <nav class="header_nav" id="header_nav">
+        <nav class="lobby_nav" id="lobby_nav">
+          <button class="button-img-default" id="sidebar_btn">
+            <img
+              class="top-left-iconimg-default"
+              src="assets/icons/menu-icon-reg.png"
+            />
+            <span class="title-topspan-default" id="lobby_title">Home</span>
+          </button>
+        </nav>
+      </nav>
+
+      <section class="body_section" id="body_section">
+        <section class="body-nav-wrapper" id="home_all_sec">
+          <div class="announcement-div" id="announcement-div">
+            <div class="xdate">
+              <a id="date_announcement_lbl"></a>
+              <a id="time_announcement_lbl"></a>
+            </div>
+            <div class="xannounce">
+              <a id="announcement_lbl"></a>
+            </div>
+          </div>
+
+          <div class="search-default-div" id="search-parseclass-div">
+            <img
+              class="search-default-img"
+              src="assets/icons/magnifying-glass-solid.svg"
+              alt=""
+              id="searchparseclass_img"
+            />
+            <input
+              class="search-default-txt"
+              type="text"
+              id="searchparseclass_txt"
+              placeholder="Search ParseClass"
+            />
+          </div>
+          <div class="parseclass-default-div" id="parseclass-default-div"></div>
+          <div class="" id="notyetstarted_div">
+            <img
+              class="sem-bg-img"
+              src="assets/sem_bg_600px.png"
+              alt=""
+              id="sem-bg-img"
+            />
+          </div>
+        </section>
+
+        <section class="body-nav-wrapper" id="game_student_sec">
+          <div class="search-default-div" id="">
+            <img
+              class="search-default-img"
+              src="assets/icons/magnifying-glass-solid.svg"
+              alt=""
+              id="searchgame_img"
+            />
+            <input
+              class="search-default-txt"
+              type="text"
+              id="searchgame_txt"
+              placeholder="Search Game"
+            />
+          </div>
+          <div class="game-default-div" id="">
+            <div class="game-default-wrapper" id="game-1">
+              <div class="game-default-gradient">
+                <span class="game-default-span"
+                  ><label for="" class="game-header-lbl">Flip IT!</label>
+                  <label for="" class="game-header-sublbl"
+                    >Match Card Puzzle</label
+                  >
+                </span>
+              </div>
+            </div>
+            <div class="game-default-wrapper" id="game-2">
+              <div class="game-default-gradient">
+                <span class="game-default-span"
+                  ><label for="" class="game-header-lbl">FruitMania</label>
+                  <label for="" class="game-header-sublbl"
+                    >Math Puzzle Game</label
+                  >
+                </span>
+              </div>
+            </div>
+            <div class="game-default-wrapper" id="game-4">
+              <div class="game-default-gradient">
+                <span class="game-default-span"
+                  ><label for="" class="game-header-lbl">Quiz Masters</label>
+                  <label for="" class="game-header-sublbl">Trivia Games</label>
+                </span>
+              </div>
+            </div>
+            <div class="game-default-wrapper" id="game-3">
+              <div class="game-default-gradient">
+                <span class="game-default-span"
+                  ><label for="" class="game-header-lbl"
+                    >Parser's Learning Hub</label
+                  >
+                  <label for="" class="game-header-sublbl">Quizzes</label>
+                </span>
+              </div>
+            </div>
+
+            <!-- fillers -->
+            <div class="game-default-wrapper" style="visibility: hidden"></div>
+          </div>
+        </section>
+
+        <section class="body-nav-wrapper" id="library_student_sec">
+          <div class="search-default-div" id="">
+            <img
+              class="search-default-img"
+              src="assets/icons/magnifying-glass-solid.svg"
+              alt=""
+              id=""
+            />
+            <input
+              class="search-default-txt"
+              type="text"
+              id="searchvideo_txt"
+              placeholder="Search Video"
+            />
+          </div>
+        </section>
+        <section class="body-nav-wrapper" id="chatgpt_all_sec"></section>
+        <section class="body-nav-wrapper" id="honors_teacher_sec"></section>
+
+        <section class="body-nav-wrapper" id="share_teacher_sec">
+          <div class="share_teacher_wrapper" id="share_teacher_wrapper">
+            <section class="header-share">
+              <span class="lbl-share">Share an Announcement.</span>
+              <span class="lbl-subshare"
+                >Announcements will be available to all students.</span
+              >
+            </section>
+            <section class="body-share">
+              <section class="body-share-wrapper">
+                <span class="body-share-header">Header</span>
+                <input
+                  class="share-txt"
+                  type="textarea"
+                  id="body-share-header"
+                  placeholder="Please wear your departmental shirt tomorrow"
+                />
+              </section>
+              <section class="body-share-wrapper-description">
+                <span class="body-share-description">Description</span>
+                <textarea
+                  row="0"
+                  oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px';"
+                  id="body-share-description"
+                  placeholder="Enter details here..."
+                ></textarea>
+              </section>
+              <section class="body-share-wrapper-description select-bg">
+                <span class="body-share-description select-bg-head"
+                  >Select Background
+                  <img
+                    class="select-bg-img"
+                    id="select-bg-img"
+                    src="assets/icons/arrow-rotate-left-solid.svg"
+                /></span>
+                <button id="background-1"></button>
+                <button id="background-2"></button>
+                <button id="background-3"></button>
+                <button id="background-4"></button>
+              </section>
+              <button id="share-announcement-btn">Share</button>
+            </section>
+          </div>
+        </section>
+      </section>
+      <footer class="footer_nav" id="footer_nav">
+        <nav class="footer_nav" id="student_nav" style="display: none">
+          <div class="lobby-icon-wrapper" id="homelobby_btn">
+            <img
+              class="homelobby_icon"
+              src="assets/icons/house-solid.svg"
+              alt=""
+              id="homelobby_img"
+            />
+            <span class="homelobby_icon_lbl" id="homelobby_lbl">Home</span>
+          </div>
+          <div class="lobby-icon-wrapper" id="homegame_btn">
+            <img
+              class="homelobby_icon"
+              src="assets/icons/gamepad-solid.svg"
+              alt=""
+              id="homegame_img"
+            />
+            <span class="homelobby_icon_lbl" id="homegame_lbl">Game</span>
+          </div>
+          <div class="lobby-icon-wrapper" id="homelibrary_btn">
+            <img
+              class="homelobby_icon"
+              src="assets/icons/youtube-brands-solid.svg"
+              alt=""
+              id="homelibrary_img"
+            />
+            <span class="homelobby_icon_lbl" id="homelibrary_lbl">Library</span>
+          </div>
+          <div class="lobby-icon-wrapper" id="homechatbot_btn">
+            <img
+              class="homelobby_icon"
+              src="assets/icons/ChatGPT.png"
+              alt=""
+              id="homechatbot_img"
+            />
+            <span class="homelobby_icon_lbl" id="homechatbot_lbl">Chatbot</span>
+          </div>
+        </nav>
+        <nav class="footer_nav" id="teacher_nav" style="display: none">
+          <div class="lobby-icon-wrapper" id="homelobby_btnx">
+            <img
+              class="homelobby_icon"
+              src="assets/icons/house-solid.svg"
+              alt=""
+              id="homelobby_imgx"
+            />
+            <span class="homelobby_icon_lbl" id="homelobby_lblx">Home</span>
+          </div>
+          <div class="lobby-icon-wrapper" id="homehonors_btn">
+            <img
+              class="homelobby_icon"
+              src="assets/icons/medal-solid.svg"
+              alt=""
+              id="homehonors_img"
+            />
+            <span class="homelobby_icon_lbl" id="homehonors_lbl">Honors</span>
+          </div>
+          <div class="lobby-icon-wrapper" id="homeshare_btn">
+            <img
+              class="homelobby_icon"
+              src="assets/icons/bullhorn-solid.svg"
+              alt=""
+              id="homeshare_img"
+            />
+            <span class="homelobby_icon_lbl" id="homeshare_lbl">Share</span>
+          </div>
+          <div class="lobby-icon-wrapper" id="homechatbot_btnx">
+            <img
+              class="homelobby_icon"
+              src="assets/icons/ChatGPT.png"
+              alt=""
+              id="homechatbot_imgx"
+            />
+            <span class="homelobby_icon_lbl" id="homechatbot_lblx"
+              >Chatbot</span
+            >
+          </div>
+        </nav>
+      </footer>
+    </div>
+
+    <script type="module" src="homepage.js"></script>
+  </body>
+</html>
