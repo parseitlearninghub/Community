@@ -27,18 +27,6 @@
           <div class="profile_mgmt" id="user_profile_btn">
             <img src="user.png" alt="" />
           </div>
-          
-        </div>
-        <div class="lobby-icon-wrapper" id="homechatbot_btnx">
-          <img
-            class="homelobby_icon"
-            src="assets/icons/ChatGPT.png"
-            alt=""
-            id="homechatbot_imgx"
-          />
-          <span class="homelobby_icon_lbl" id="homechatbot_lblx"
-            >Chatbot</span
-          >
         </div>
       </div>
       <div class="subheader">
@@ -63,7 +51,7 @@
     <div class="query-modal" id="queryModal">
       <button class="query-close-button" onclick="closeModal()">&times;</button>
       <h2>Post Your Query</h2>
-      <textarea
+      <textarea class="post-content"
         id="queryDescription"
         placeholder="Describe your query in detail"
       ></textarea>
@@ -79,10 +67,9 @@
       <h2>Answers</h2>
       <div class="modal-body">
       </div>
-      <label for="newComment">Add an answer</label>
-      <textarea id="newComment" placeholder="Write your answer here"></textarea>
+      <textarea class="answer-content" id="newComment"></textarea>
 
-      <button id="answer_btn" class="btn">Post Answer</button>
+      <!-- <button id="answer_btn" class="btn">Post Answer</button> -->
     </div>
 
     <script type="module" src="database.js"></script>
