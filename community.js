@@ -65,3 +65,14 @@ document.addEventListener('click', (event) => {
       }
   });
 });
+const images = document.querySelectorAll('.header_icons img'); // Select all images in the header
+
+images.forEach(img => {
+    img.addEventListener('click', function() {
+        // Remove 'active' class from all images
+        images.forEach(image => image.classList.remove('active'));
+        
+        // Add 'active' class to the clicked image
+        this.classList.add('active');
+    });
+});
