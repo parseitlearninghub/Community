@@ -101,7 +101,6 @@ margin-left: 15px;
 }
 
 .top-profile-pic {
-    width: 2rem;
     aspect-ratio: 1/1;
     border-radius: 50%;
     overflow: hidden;
@@ -196,7 +195,6 @@ img {
  .subheader {
     display: flex;
     align-items: center; 
-    justify-content: space-between; 
     width: 100%;
     height: 60px;
     padding: 6px;
@@ -204,19 +202,37 @@ img {
 }
 
 .top-profile-pic img {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     margin-right: 10px; 
+    margin-top: 4px;;
+
 }
 
-.post-query-header .text {
+/* .post-query-header .text {
     margin-left: 0.5rem;
     font-size: 14px;
     flex: 1;
-}
+} */
+.post-query-text {
+    cursor: pointer;
+    padding: 8px 34%; /* Use percentage-based padding for responsiveness */
+    background-color: #f4d7cd;
+    color: rgb(0, 0, 0);
+    border-radius: 20px;
+    box-sizing: border-box; /* Ensure padding is included in the element's total width/height */
+    width: auto; /* Allow width to be dynamic */
+    font-size: 14px;
+    white-space: nowrap; /* Prevent text from wrapping */
+  }
 
-.post-query-header .btn {
+  .post-query-text span {
+    display: inline-block; /* Make it respect the width */
+    width: 100%;
+    white-space: nowrap;
+  }
+/* .post-query-header .btn {
     margin-left: auto; 
     padding: 0.6rem 1.5rem;
     font-size: 14px;
@@ -230,7 +246,7 @@ img {
 
 .post-query-header .btn:hover {
     background: #c02d2d;
-}
+} */
 
 
 /* Feed Posts */
@@ -370,7 +386,7 @@ label {
     margin-bottom: 0.5rem;
 }
 
-button {
+.post-answer-btn {
     padding: 0.6rem 1rem;
     border: 2px solid black;
     background-color: #EB3434;
@@ -382,7 +398,7 @@ button {
     border: none; 
 }
 
-button:hover {
+.post-answer-btn:hover {
     background: #fa0000b2;
 
 }
@@ -400,7 +416,12 @@ button:hover {
     cursor: pointer;
     border-radius: 50%;
     padding: 0rem 0.4rem;
-    margin: 0rem 0.5rem
+    margin: 0rem 0.5rem;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    filter: brightness(30%) saturate(150%) invert(20%) sepia(50%) hue-rotate(-10deg);
+
 }
 
 .query-close-button:hover, .close-button:hover {
@@ -482,12 +503,13 @@ button:hover {
     color: #333;
     cursor: pointer;
     z-index: 20;
+    width: 20px;
+    height: 20px;
 }
 
 .answers-close-button:hover {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 50%;
-    
+    filter: brightness(300%) saturate(150%) invert(20%) sepia(50%) hue-rotate(-10deg);
+
 }
 
 .comments {

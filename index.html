@@ -35,12 +35,13 @@
         <div class="top-profile-pic">
           <img src="images/profile-pic.jpg" alt="Profile Picture" />
         </div>
-        <div class="text">
-          <span>Have a question? </span>
+        <div class="post-query-text" id="postbtn">
+          <div id="question-text">Have a question, <span id="username-placeholder"></span>?</div>
+
         </div>
-        <button class="btn" id="postbtn">
+        <!-- <button class="btn" id="postbtn">
           Post Query
-        </button>
+        </button> -->
       </div>
 
       <!-- Feed Posts Container -->
@@ -51,7 +52,7 @@
 
     <!-- Post Query Modal -->
     <div class="query-modal" id="queryModal">
-      <button class="query-close-button" id="close_btn">&times;</button>
+      <button class="query-close-button" id="close_btn"><img src="images/close-button.png" alt=""></button>
       <h2>Post Your Query</h2>
       <textarea class="post-content"
         id="queryDescription"
@@ -64,14 +65,14 @@
     <!-- Answers/Comments Modal -->
     <div class="answers-modal" id="answersModal">
       <button class="answers-close-button" id="close_answermodal">
-        &times;
+        <img src="images/close-button.png" alt="">
       </button>
       <h2>Answers</h2>
       <div class="modal-body">
       </div>
       <textarea class="answer-content" id="newComment"></textarea>
 
-      <!-- <button id="answer_btn" class="btn">Post Answer</button> -->
+      <button id="answer_btn" class="post-answer-btn">Post Answer</button>
     </div>
 
     <script defer type="module" src="database.js" ></script>

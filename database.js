@@ -81,30 +81,46 @@ document.getElementById("post_query_btn").addEventListener("click", function () 
   // Clear the input field and close the modal after posting
   document.getElementById("queryDescription").value = ""; 
   closeModal(); // Call this function to close the query modal
-
+  loadPosts();
 })
+
+function closeModal() {
+  overlay.classList.remove("active");
+  queryModal.classList.remove("active");
+}
+
+// After ensuring the username is stored in localStorage
+const username = localStorage.getItem("student_username");
+
+// Check if username exists, then update the DOM
+if (username) {
+    document.getElementById('username-placeholder').textContent = username;
+} else {
+    console.error("Username not found.");
+}
+
+
 async function getParser(student_id) {
   const postsRef = ref(database, `PARSEIT/username/`);
 
   return await get(postsRef).then((snapshot) => {
     if (snapshot.exists()) {
       const posts = snapshot.val();
-
-      // Clear the feed container
-      feedContainer.innerHTML = "";
-
-        Object.keys(posts).forEach((postId) => {
+      Object.keys(posts).forEach((postId) => {
         const post = posts[postId];
-
         if (post === student_id) {
           localStorage.setItem("student_username", postId);
-          return postId;
-
+          // Once the username is stored, dynamically update the DOM
+          const username = localStorage.getItem("student_username");
+          if (username) {
+            document.getElementById('username-placeholder').textContent = username;
+          }
         }
-      })
+      });
     }
   });
 }
+
 const feedContainer = document.getElementById("feedContainer");
 
 function openMenu(menuElement) {
