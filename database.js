@@ -35,6 +35,36 @@ getParser(localStorage.getItem("user-parser"));
 document.getElementById("community_home_btn").addEventListener("click", function () {
   location.reload();
 });
+const overlay = document.getElementById("overlay");
+const queryModal = document.getElementById("queryModal");
+const answersModal = document.getElementById("answersModal");
+const closeModalBtn = document.querySelector(".query-close-button");
+const closeAnswersBtn = document.querySelector(".answers-close-button");
+let activeFeed = null; 
+
+document.getElementById("postbtn").addEventListener("click", function() {
+  overlay.classList.add("active");
+    queryModal.classList.add("active");
+});
+
+document.getElementById("close_btn").addEventListener("click", function() {
+  overlay.classList.remove("active");
+  queryModal.classList.remove("active");
+});
+
+function openAnswersModal(feedElement, postId) {
+  localStorage.setItem("active_post_id", postId);
+  overlay.classList.add("active");
+  answersModal.classList.add("active");
+  activeFeed = feedElement; 
+  loadAnswers(postId);
+}
+
+document.getElementById("close_answermodal").addEventListener("click", function() {
+  overlay.classList.remove("active");
+  answersModal.classList.remove("active");
+  activeFeed = null;
+});
 
 document.getElementById("post_query_btn").addEventListener("click", function () {
   const student_id = localStorage.getItem("user-parser")
@@ -79,15 +109,20 @@ const feedContainer = document.getElementById("feedContainer");
 
 function openMenu(menuElement) {
   const menu = menuElement.querySelector('.menu-options');
-
   if (menu.classList.contains('show')) {
-    menu.classList.remove('show');
+      menu.classList.remove('show');
+      menu.style.display = 'none';
   } else {
-    const allMenus = document.querySelectorAll('.menu-options');
-    allMenus.forEach((m) => m.classList.remove('show'));
-    menu.classList.add('show');
+      const allMenus = document.querySelectorAll('.menu-options');
+      allMenus.forEach((m) => {
+          m.classList.remove('show');
+          m.style.display = 'none'; // Hide all other menus
+      });
+      menu.classList.add('show');
+      menu.style.display = 'flex'; // Show the menu
   }
 }
+
 
 function submitQuery(username, time, description, post_id, student_id) {
 
@@ -106,54 +141,69 @@ function submitQuery(username, time, description, post_id, student_id) {
 function loadPosts() {
   const postsRef = ref(database, `PARSEIT/community/posts/`);
 
-  get(postsRef).then((snapshot) => {
-    if (snapshot.exists()) {
-      const posts = snapshot.val();
+  get(postsRef)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        const posts = snapshot.val();
+        feedContainer.innerHTML = ""; // Clear the container
 
-      feedContainer.innerHTML = "";
+        Object.keys(posts).forEach((postId) => {
+          const post = posts[postId];
 
-     Object.keys(posts).forEach((postId) => {
-        const post = posts[postId];
+          // Create a unique ID for each menu and post actions
+          const menuId = `menu-${postId}`;
+          const editId = `edit-${postId}`;
+          const reportId = `report-${postId}`;
+          const answerId = `answer-${postId}`;
 
-        const postElement = document.createElement("div");
-        postElement.classList.add("feed");
+          const postElement = document.createElement("div");
+          postElement.classList.add("feed");
 
-        postElement.innerHTML = `
-          <div class="user">
-              <div class="profile-pic">
-                  <img src="profile-pic.jpg" alt="User Picture">
-              </div>
-              <div class="text">
-                  <strong class="username">${post.username}</strong><br>
-                  <small class="time-posted">${posts[postId].time}</small>
-              </div>
-               <div class="menu-icon" onclick="toggleMenu(this)">
-          &#8942; 
-          <div class="menu-options">
-              <div class="menu-item" onclick="editPost('${postId}')">Edit</div>
-              <div class="menu-item" onclick="reportPost('${postId}')">Report</div>
-          </div>
-      </div>
-          </div>
-          <div class="post">
-              <p>${post.description}</p>
-          </div>
-          <div class="feed-footer">
-              <small class="view-comments" onclick="openAnswersModal(this.parentElement.parentElement, '${postId}')"> Answer</small>
-          </div>
-          <div class="comments"></div> <!-- Comments container -->
-        `;
+          postElement.innerHTML = `
+            <div class="user">
+                <div class="profile-pic">
+                    <img src="profile-pic.jpg" alt="User Picture">
+                </div>
+                <div class="text">
+                    <strong class="username">${post.username}</strong><br>
+                    <small class="time-posted">${post.time}</small>
+                </div>
+                <div class="menu-icon" id="${menuId}">
+                    &#8942; 
+                    <div class="menu-options">
+                        <div class="menu-item" id="${editId}">
+                        <img src="edit_icon.png"/>
+                        Edit</div>
+                        <div class="menu-item" id="${reportId}">
+                        <img src="report.png" />
+                        Report</div>
+                    </div>
+                </div>
+            </div>
+            <div class="post">
+                <p>${post.description}</p>
+            </div>
+            <div class="feed-footer">
+                <small class="view-comments" id="${answerId}">Answer</small>
+            </div>
+            <div class="comments"></div> <!-- Comments container -->
+          `;
+          feedContainer.prepend(postElement);
 
-        // Add the post to the feed container
-        feedContainer.prepend(postElement);
-      });
-    } else {
-      console.log("No posts available.");
-    }
-  }).catch((error) => {
-    console.error("Error loading posts:", error);
-  });
+          document.getElementById(menuId).addEventListener("click", () => openMenu(document.getElementById(menuId))); // Use openMenu here
+          document.getElementById(editId).addEventListener("click", () => editPost(postId));
+          document.getElementById(reportId).addEventListener("click", () => reportPost(postId));
+          document.getElementById(answerId).addEventListener("click", () => openAnswersModal(postElement, postId));
+        });
+      } else {
+        console.log("No posts available.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error loading posts:", error);
+    });
 }
+
 
 document.addEventListener("DOMContentLoaded", function () {
   const student_id = localStorage.getItem("user-parser");
@@ -168,16 +218,14 @@ function getCurrentTime() {
     "July", "August", "September", "October", "November", "December"
   ];
 
-  // Get the current month name
-  const month = monthNames[now.getMonth()]; // Get month index and map to name
+  const month = monthNames[now.getMonth()];
   const day = String(now.getDate()).padStart(2, "0");
   const year = now.getFullYear();
 
-  // Format the time
   const hours = now.getHours();
   const minutes = now.getMinutes();
   const ampm = hours >= 12 ? "PM" : "AM";
-  const formattedHours = hours % 12 || 12; // Convert 24-hour to 12-hour format
+  const formattedHours = hours % 12 || 12;
   const formattedMinutes = String(minutes).padStart(2, "0");
 
   return `${month} ${day}, ${year} ${formattedHours}:${formattedMinutes} ${ampm}`;
@@ -315,3 +363,42 @@ function reportPost(postId) {
   }
 }
 
+
+
+overlay.addEventListener("click", () => {
+    closeModal();
+    closeAnswersModal();
+});
+
+
+function toggleMenu(menuElement) {
+  // Close any open menus
+  const allMenus = document.querySelectorAll('.menu-icon');
+  allMenus.forEach((menu) => {
+      if (menu !== menuElement) {
+          menu.classList.remove('active');
+      }
+  });
+
+  // Toggle the active state for the clicked menu
+  menuElement.classList.toggle('active');
+}
+
+// Close the menu when clicking outside
+document.addEventListener('click', (event) => {
+  const allMenus = document.querySelectorAll('.menu-icon');
+  allMenus.forEach((menu) => {
+      if (!menu.contains(event.target)) {
+          menu.classList.remove('active');
+      }
+  });
+});
+const images = document.querySelectorAll('.header_icons img');
+
+images.forEach(img => {
+    img.addEventListener('click', function() {
+        images.forEach(image => image.classList.remove('active'));
+        
+        this.classList.add('active');
+    });
+});
