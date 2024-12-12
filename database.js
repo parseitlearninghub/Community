@@ -176,6 +176,7 @@ function submitQuery(username, time, description, post_id, student_id) {
 function loadPosts() {
   const postsRef = ref(database, `PARSEIT/community/posts/`);
   const currentUserId = localStorage.getItem("user-parser");
+  console.log(currentUserId);
 
   get(postsRef)
     .then((snapshot) => {
@@ -185,16 +186,17 @@ function loadPosts() {
 
         Object.keys(posts).forEach((postId) => {
           const post = posts[postId];
-        
-          // Create a unique ID for each menu and post actions
+
+          // Create unique IDs for menu options
           const menuId = `menu-${postId}`;
           const editId = `edit-${postId}`;
           const reportId = `report-${postId}`;
           const answerId = `answer-${postId}`;
-        
+
           const postElement = document.createElement("div");
           postElement.classList.add("feed");
-        
+
+          // Rendering post content
           postElement.innerHTML = `
             <div class="user">
                 <div class="profile-pic">
@@ -207,14 +209,14 @@ function loadPosts() {
                 <div class="menu-icon" id="${menuId}">
                     &#8942; 
                     <div class="menu-options">
-                        ${post.username === currentUserId 
-                          ? `<div class="menu-item" id="${editId}">
-                               <img src="images/edit_icon.png"/>
-                               Edit</div>`
-                          : `<div class="menu-item" id="${reportId}">
-                               <img src="images/report.png" />
-                               Report</div>`
-                        }
+                        ${post.username === currentUserId ? 
+                            `<div class="menu-item" id="${editId}">
+                                <img src="images/edit_icon.png"/>
+                                Edit</div>` 
+                            : 
+                            `<div class="menu-item" id="${reportId}"> 
+                                <img src="images/report.png" />
+                                Report</div>`}
                     </div>
                 </div>
             </div>
@@ -226,23 +228,23 @@ function loadPosts() {
             </div>
             <div class="comments"></div> <!-- Comments container -->
           `;
-        
+
           feedContainer.prepend(postElement);
-        
-          // Open the correct menu for the post
+
+          // Attach event listeners for Edit, Report, and Answer actions
           document.getElementById(menuId).addEventListener("click", () => toggleMenu(postElement));
-        
-          // Add event listeners for Edit, Report, and Answer actions
+
           if (post.username === currentUserId) {
-            // Only allow the post owner to edit
+            // Add event listener for the Edit option (only for your own posts)
             document.getElementById(editId).addEventListener("click", () => editPost(postId));
           } else {
-            // Otherwise, only show the Report option
+            // Add event listener for the Report option (only for other posts)
             document.getElementById(reportId).addEventListener("click", () => reportPost(postId));
           }
+
+          // Answer functionality
           document.getElementById(answerId).addEventListener("click", () => openAnswersModal(postElement, postId));
         });
-        
       } else {
         console.log("No posts available.");
       }
