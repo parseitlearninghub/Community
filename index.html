@@ -16,7 +16,9 @@
     <div class="feeds">
       <div class="community_header">
         <div class="header_icons">
-          <button id="back_btn" onclick="window.location.href='https://parseitlearninghub.github.io/parsers/'">←</button>
+          <div class="back_btn">
+          <button id="back_btn" onclick="window.location.href='https://parseitlearninghub.github.io/parsers/'"><img src="images/left-arrow.png" alt=""/></button>
+        </div>
           <div class="commmunity_home" id="community_home_btn">
             <img src="images/home.png" alt="" id="home_btn" />
           </div>
@@ -31,6 +33,17 @@
           </div>
         </div>
       </div>
+      <!-- Full-Screen Sections -->
+  <div class="section notif_page_section" id="notif_page_section">
+    Notifications Section
+  </div>
+  <div class="section messages_page_section" id="messages_page_section">
+    Messages Section
+  </div>
+  <div class="section profile_mgmt_section" id="profile_mgmt_section">
+    Profile Management Section
+  </div>
+
       <div class="subheader">
         <div class="top-profile-pic">
           <img src="images/profile-pic.jpg" alt="Profile Picture" />
@@ -70,9 +83,12 @@
       <h2>Answers</h2>
       <div class="modal-body">
       </div>
-      <textarea class="answer-content" id="newComment"></textarea>
+      <div class="answer-content-wrapper">
+        <textarea class="answer-content" id="newComment"></textarea>
 
-      <button id="answer_btn" class="post-answer-btn">Post Answer</button>
+      </div>
+      
+      <button id="answer_btn" class="post-answer-btn"><img src="images/send-comment.png" alt=""></button>
     </div>
 
     <script defer type="module" src="database.js" ></script>

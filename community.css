@@ -123,7 +123,6 @@ img {
     color: black;
     background: none;
     cursor: pointer;
-    margin-right: 50px;
     transition: background-color 0.3s ease, transform 0.3s ease; 
 }
 
@@ -164,34 +163,73 @@ img {
     width: 100%;
     z-index: 1000;
     display: flex;
-    margin-bottom: 2px;
-    font-weight: bold;
-    color: #333;
     align-items: center; 
-    justify-content: center; 
+    justify-content: space-evenly;
     padding: 10px; 
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
-   
-    
-}
+  }
 
 .header_icons img {
-    width: 25px;
-    height: 25px;
-    margin-right: 60px;
-    transition: filter 0.3s ease;
-    cursor: pointer;
-    filter: brightness(30%) saturate(150%) invert(20%) sepia(50%) hue-rotate(-10deg);
-
+width: 25px;
+height: 25px;
+transition: filter 0.3s ease, border-bottom 0.3s ease;
+cursor: pointer;
+filter: brightness(0) saturate(0%);
 }
 
 .header_icons img:hover {
-    filter: brightness(30%) saturate(200%) invert(5%) sepia(95%) hue-rotate(-10deg);
+filter: brightness(0) saturate(100%) sepia(100%) hue-rotate(-10deg) brightness(1.2) contrast(1.1);
 }
-.header_icons img:active {
-    border-bottom: 4px solid red; 
+
+.header_icons img.active {
+filter: brightness(0) saturate(100%) sepia(100%) hue-rotate(-10deg) brightness(1.2) contrast(1.1);
+border-bottom: 3px solid red;
 }
+
+.header_icons button {
+background: none;
+border: none;
+font-size: 18px;
+cursor: pointer;
+color: #333;
+}
+
+.header_icons button:hover {
+color: red;
+}
+
+.section {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+display: none;
+align-items: center;
+justify-content: center;
+color: white;
+font-size: 2rem;
+z-index: 999;
+font-size: 20px;
+}
+
+.section.active {
+display: flex;
+}
+
+.notif_page_section {
+background-color: #f44336;
+}
+
+.messages_page_section {
+background-color: #2196F3;
+}
+
+.profile_mgmt_section {
+background-color: #4CAF50;
+}
+
  .subheader {
     display: flex;
     align-items: center; 
@@ -230,6 +268,7 @@ img {
     display: inline-block; 
     width: auto;
     white-space: nowrap; 
+    margin-left: 10px;
 }
 
 #question-text span {
@@ -374,7 +413,7 @@ label {
     margin-bottom: 0.5rem;
 }
 
-.post-answer-btn, #post_query_btn {
+ #post_query_btn {
     padding: 0.6rem 1rem;
     border: 2px solid black;
     background-color: #EB3434;
@@ -386,9 +425,29 @@ label {
     border: none; 
 }
 
-.post-answer-btn,#post_query_btn:hover {
+#post_query_btn:hover {
     background: #fa0000b2;
 
+}
+.post-answer-btn {
+    position: absolute;
+    right: 10px; /* Adjust to your preference */
+    bottom: 10px; /* Adjust to your preference */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 200; /* Ensure it appears above other elements */
+    outline: none;
+}
+
+.post-answer-btn img {
+    width: 24px; /* Adjust size if needed */
+    height: 24px; /* Adjust size if needed */
+    transition: transform 0.2s ease-in-out;
+}
+
+.post-answer-btn:hover img {
+    transform: scale(1.2); /* Add a hover effect */
 }
 
 .post-content::placeholder {
@@ -573,7 +632,12 @@ label {
     outline: none;               
 }
 
-
+.answer-content-wrapper{
+    position: relative;
+    padding: 10px;
+    /* box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, */
+    /* rgba(0, 0, 0, 0.3) 0px 8px 16px -8px; */
+}
 
 /* textarea #newComment {
 

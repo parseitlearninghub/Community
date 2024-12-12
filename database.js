@@ -89,6 +89,28 @@ function closeModal() {
   queryModal.classList.remove("active");
 }
 
+document.getElementById('notification_btn').addEventListener('click', function() {
+  toggleSection('notif_page_section');
+});
+
+document.getElementById('messages_page_btn').addEventListener('click', function() {
+  toggleSection('messages_page_section');
+});
+
+document.getElementById('user_profile_btn').addEventListener('click', function() {
+  toggleSection('profile_mgmt_section');
+});
+
+function toggleSection(sectionId) {
+  // Hide all sections
+  document.querySelectorAll('.section').forEach(section => {
+    section.classList.remove('active');
+  });
+
+  // Show the selected section
+  document.getElementById(sectionId).classList.add('active');
+}
+
 const username = localStorage.getItem("student_username");
 
 // Check if username exists, then update the DOM
