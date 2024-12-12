@@ -162,7 +162,7 @@ function loadPosts() {
           postElement.innerHTML = `
             <div class="user">
                 <div class="profile-pic">
-                    <img src="profile-pic.jpg" alt="User Picture">
+                    <img src="images/profile-pic.jpg" alt="User Picture">
                 </div>
                 <div class="text">
                     <strong class="username">${post.username}</strong><br>
@@ -172,10 +172,10 @@ function loadPosts() {
                     &#8942; 
                     <div class="menu-options">
                         <div class="menu-item" id="${editId}">
-                        <img src="edit_icon.png"/>
+                        <img src="images/edit_icon.png"/>
                         Edit</div>
                         <div class="menu-item" id="${reportId}">
-                        <img src="report.png" />
+                        <img src="images/report.png" />
                         Report</div>
                     </div>
                 </div>
