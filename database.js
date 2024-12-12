@@ -124,12 +124,29 @@ function openMenu(menuElement) {
 
 }
 
-function toggleMenu() {
-  const menu = document.querySelector('.menu-options');
+function toggleMenu(postElement) {
+  // Find the menu associated with the current post
+  const menu = postElement.querySelector('.menu-options');
   
   // Toggle the visibility of the menu
-  menu.classList.toggle('show');
+  if (menu.classList.contains('show')) {
+      menu.classList.remove('show');
+      menu.style.display = 'none';
+  } else {
+      menu.classList.add('show');
+      menu.style.display = 'flex'; // Show the menu for the clicked post
+  }
+
+  // Close all other menus
+  const allMenus = document.querySelectorAll('.menu-options');
+  allMenus.forEach((m) => {
+      if (m !== menu) {
+          m.classList.remove('show');
+          m.style.display = 'none'; // Hide all other menus
+      }
+  });
 }
+
 
 // Close the menu when clicking outside of it
 document.addEventListener('click', function(event) {
@@ -158,7 +175,7 @@ function submitQuery(username, time, description, post_id, student_id) {
 
 function loadPosts() {
   const postsRef = ref(database, `PARSEIT/community/posts/`);
-  const currentUserId = localStorage.getItem("user-parser"); // Get the current user's ID
+  const currentUserId = localStorage.getItem("user-parser");
 
   get(postsRef)
     .then((snapshot) => {
@@ -193,7 +210,7 @@ function loadPosts() {
                         ${post.username === currentUserId ? `<div class="menu-item" id="${editId}">
                                                                 <img src="images/edit_icon.png"/>
                                                                 Edit</div>` 
-                                                          : `<div class="menu-item" id="${reportId}">
+                                                          : `<div class="menu-item" id="${reportId}"> 
                                                                 <img src="images/report.png" />
                                                                 Report</div>`}
                     </div>
@@ -210,7 +227,7 @@ function loadPosts() {
 
           feedContainer.prepend(postElement);
 
-          // Open the correct menu
+          // Open the correct menu for the post
           document.getElementById(menuId).addEventListener("click", () => toggleMenu(postElement));
 
           // Add event listeners for Edit, Report, and Answer actions
@@ -231,6 +248,7 @@ function loadPosts() {
       console.error("Error loading posts:", error);
     });
 }
+
 
 
 
