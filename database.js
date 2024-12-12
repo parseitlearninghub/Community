@@ -111,6 +111,54 @@ function toggleSection(sectionId) {
   document.getElementById(sectionId).classList.add('active');
 }
 
+ const icons = document.querySelectorAll('.header_icons div');
+  const sections = document.querySelectorAll('.section');
+
+  // Function to check and toggle active class on icons
+  function setActiveIcon(iconId) {
+    icons.forEach(icon => {
+      if (icon.id === iconId) {
+        icon.classList.add('active');
+      } else {
+        icon.classList.remove('active');
+      }
+    });
+  }
+
+  // Function to toggle sections
+  function showSection(sectionId) {
+    sections.forEach(section => {
+      if (section.classList.contains(sectionId)) {
+        section.classList.add('active');
+      } else {
+        section.classList.remove('active');
+      }
+    });
+  }
+
+  // Add event listeners to icons
+  document.getElementById("community_home_btn").addEventListener("click", function() {
+    setActiveIcon("community_home_btn");
+    showSection("notif_page_section"); // or the corresponding section ID
+  });
+
+  document.getElementById("notification_btn").addEventListener("click", function() {
+    setActiveIcon("notification_btn");
+    showSection("messages_page_section");
+  });
+
+  document.getElementById("messages_page_btn").addEventListener("click", function() {
+    setActiveIcon("messages_page_btn");
+    showSection("profile_mgmt_section");
+  });
+
+  document.getElementById("user_profile_btn").addEventListener("click", function() {
+    setActiveIcon("user_profile_btn");
+    showSection("profile_mgmt_section");
+  });
+
+
+
 const username = localStorage.getItem("student_username");
 
 // Check if username exists, then update the DOM

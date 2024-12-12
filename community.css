@@ -170,12 +170,18 @@ img {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
   }
 
+.header_icons .active {
+border-bottom: 3px solid rgb(106, 98, 98);
+
+}
+
 .header_icons img {
 width: 25px;
 height: 25px;
 transition: filter 0.3s ease, border-bottom 0.3s ease;
 cursor: pointer;
-filter: brightness(0) saturate(0%);
+filter: invert(23%) sepia(100%) saturate(500%) hue-rotate(-50deg);
+margin-bottom:2px; 
 }
 
 .header_icons img:hover {
