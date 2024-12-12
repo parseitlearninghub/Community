@@ -210,46 +210,34 @@ img {
 
 }
 
-/* .post-query-header .text {
-    margin-left: 0.5rem;
-    font-size: 14px;
-    flex: 1;
-} */
 .post-query-text {
     cursor: pointer;
-    padding: 8px 34%; /* Use percentage-based padding for responsiveness */
+    padding: 8px; 
     background-color: #f4d7cd;
     color: rgb(0, 0, 0);
     border-radius: 20px;
-    box-sizing: border-box; /* Ensure padding is included in the element's total width/height */
-    width: auto; /* Allow width to be dynamic */
+    box-sizing: border-box; 
+    width: 100%; 
+    max-width: 800px; 
     font-size: 14px;
-    white-space: nowrap; /* Prevent text from wrapping */
-  }
-
-  .post-query-text span {
-    display: inline-block; /* Make it respect the width */
-    width: 100%;
     white-space: nowrap;
-  }
-/* .post-query-header .btn {
-    margin-left: auto; 
-    padding: 0.6rem 1.5rem;
-    font-size: 14px;
-    background: #EB3434;
-    color: #FFF;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background 300ms ease;
+    text-align: left; 
+    display: flex; 
+    align-items: center; 
 }
 
-.post-query-header .btn:hover {
-    background: #c02d2d;
-} */
+#question-text {
+    display: inline-block; 
+    width: auto;
+    white-space: nowrap; 
+}
+
+#question-text span {
+    margin: 0; 
+    padding: 0;
+}
 
 
-/* Feed Posts */
 .feed {
     position: relative;
     background: #FFF;
@@ -386,7 +374,7 @@ label {
     margin-bottom: 0.5rem;
 }
 
-.post-answer-btn {
+.post-answer-btn, #post_query_btn {
     padding: 0.6rem 1rem;
     border: 2px solid black;
     background-color: #EB3434;
@@ -398,9 +386,14 @@ label {
     border: none; 
 }
 
-.post-answer-btn:hover {
+.post-answer-btn,#post_query_btn:hover {
     background: #fa0000b2;
 
+}
+
+.post-content::placeholder {
+    font-family: "Inter-Regular";
+    font-size: 14px;
 }
 
 
