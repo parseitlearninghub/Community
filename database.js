@@ -176,7 +176,7 @@ function submitQuery(username, time, description, post_id, student_id) {
 function loadPosts() {
   const postsRef = ref(database, `PARSEIT/community/posts/`);
   const currentUserId = localStorage.getItem("user-parser");
-  console.log(currentUserId);
+  const currentUsername = localStorage.getItem("student_username"); // Get the student's username from localStorage
 
   get(postsRef)
     .then((snapshot) => {
@@ -187,7 +187,6 @@ function loadPosts() {
         Object.keys(posts).forEach((postId) => {
           const post = posts[postId];
 
-          // Create unique IDs for menu options
           const menuId = `menu-${postId}`;
           const editId = `edit-${postId}`;
           const reportId = `report-${postId}`;
@@ -196,7 +195,6 @@ function loadPosts() {
           const postElement = document.createElement("div");
           postElement.classList.add("feed");
 
-          // Rendering post content
           postElement.innerHTML = `
             <div class="user">
                 <div class="profile-pic">
@@ -209,7 +207,7 @@ function loadPosts() {
                 <div class="menu-icon" id="${menuId}">
                     &#8942; 
                     <div class="menu-options">
-                        ${post.username === currentUserId ? 
+                        ${post.username === currentUsername ? 
                             `<div class="menu-item" id="${editId}">
                                 <img src="images/edit_icon.png"/>
                                 Edit</div>` 
@@ -231,18 +229,17 @@ function loadPosts() {
 
           feedContainer.prepend(postElement);
 
-          // Attach event listeners for Edit, Report, and Answer actions
+          // Open the correct menu for the post
           document.getElementById(menuId).addEventListener("click", () => toggleMenu(postElement));
 
-          if (post.username === currentUserId) {
-            // Add event listener for the Edit option (only for your own posts)
+          // Add event listeners for Edit, Report, and Answer actions
+          if (post.username === currentUsername) {
+            // Only allow the post owner to edit
             document.getElementById(editId).addEventListener("click", () => editPost(postId));
           } else {
-            // Add event listener for the Report option (only for other posts)
+            // Otherwise, only show the Report option
             document.getElementById(reportId).addEventListener("click", () => reportPost(postId));
           }
-
-          // Answer functionality
           document.getElementById(answerId).addEventListener("click", () => openAnswersModal(postElement, postId));
         });
       } else {
