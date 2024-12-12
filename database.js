@@ -121,8 +121,26 @@ function openMenu(menuElement) {
       menu.classList.add('show');
       menu.style.display = 'flex'; // Show the menu
   }
+
 }
 
+function toggleMenu() {
+  const menu = document.querySelector('.menu-options');
+  
+  // Toggle the visibility of the menu
+  menu.classList.toggle('show');
+}
+
+// Close the menu when clicking outside of it
+document.addEventListener('click', function(event) {
+  const menuIcon = document.querySelector('.menu-icon');
+  const menuOptions = document.querySelector('.menu-options');
+  
+  // Close the menu if the click is outside the menu icon and menu options
+  if (!menuIcon.contains(event.target) && !menuOptions.contains(event.target)) {
+      menuOptions.classList.remove('show');
+  }
+});
 
 function submitQuery(username, time, description, post_id, student_id) {
 
@@ -140,6 +158,7 @@ function submitQuery(username, time, description, post_id, student_id) {
 
 function loadPosts() {
   const postsRef = ref(database, `PARSEIT/community/posts/`);
+  const currentUserId = localStorage.getItem("user-parser"); // Get the current user's ID
 
   get(postsRef)
     .then((snapshot) => {
@@ -171,12 +190,12 @@ function loadPosts() {
                 <div class="menu-icon" id="${menuId}">
                     &#8942; 
                     <div class="menu-options">
-                        <div class="menu-item" id="${editId}">
-                        <img src="images/edit_icon.png"/>
-                        Edit</div>
-                        <div class="menu-item" id="${reportId}">
-                        <img src="images/report.png" />
-                        Report</div>
+                        ${post.username === currentUserId ? `<div class="menu-item" id="${editId}">
+                                                                <img src="images/edit_icon.png"/>
+                                                                Edit</div>` 
+                                                          : `<div class="menu-item" id="${reportId}">
+                                                                <img src="images/report.png" />
+                                                                Report</div>`}
                     </div>
                 </div>
             </div>
@@ -188,11 +207,20 @@ function loadPosts() {
             </div>
             <div class="comments"></div> <!-- Comments container -->
           `;
+
           feedContainer.prepend(postElement);
 
-          document.getElementById(menuId).addEventListener("click", () => openMenu(document.getElementById(menuId))); // Use openMenu here
-          document.getElementById(editId).addEventListener("click", () => editPost(postId));
-          document.getElementById(reportId).addEventListener("click", () => reportPost(postId));
+          // Open the correct menu
+          document.getElementById(menuId).addEventListener("click", () => toggleMenu(postElement));
+
+          // Add event listeners for Edit, Report, and Answer actions
+          if (post.username === currentUserId) {
+            // Only allow the post owner to edit
+            document.getElementById(editId).addEventListener("click", () => editPost(postId));
+          } else {
+            // Otherwise, only show the Report option
+            document.getElementById(reportId).addEventListener("click", () => reportPost(postId));
+          }
           document.getElementById(answerId).addEventListener("click", () => openAnswersModal(postElement, postId));
         });
       } else {
@@ -203,6 +231,7 @@ function loadPosts() {
       console.error("Error loading posts:", error);
     });
 }
+
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -371,28 +400,6 @@ overlay.addEventListener("click", () => {
 });
 
 
-function toggleMenu(menuElement) {
-  // Close any open menus
-  const allMenus = document.querySelectorAll('.menu-icon');
-  allMenus.forEach((menu) => {
-      if (menu !== menuElement) {
-          menu.classList.remove('active');
-      }
-  });
-
-  // Toggle the active state for the clicked menu
-  menuElement.classList.toggle('active');
-}
-
-// Close the menu when clicking outside
-document.addEventListener('click', (event) => {
-  const allMenus = document.querySelectorAll('.menu-icon');
-  allMenus.forEach((menu) => {
-      if (!menu.contains(event.target)) {
-          menu.classList.remove('active');
-      }
-  });
-});
 const images = document.querySelectorAll('.header_icons img');
 
 images.forEach(img => {
