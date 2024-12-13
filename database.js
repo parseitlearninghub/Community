@@ -89,25 +89,32 @@ function closeModal() {
   queryModal.classList.remove("active");
 }
 
-document.getElementById('notification_btn').addEventListener('click', function() {
-  toggleSection('notif_page_section');
+document.getElementById('notification_btn').addEventListener('click', function () {
+  toggleSection('notification_btn', 'notif_page_section');
 });
 
-document.getElementById('messages_page_btn').addEventListener('click', function() {
-  toggleSection('messages_page_section');
+document.getElementById('messages_page_btn').addEventListener('click', function () {
+  toggleSection('messages_page_btn', 'messages_page_section');
 });
 
-document.getElementById('user_profile_btn').addEventListener('click', function() {
-  toggleSection('profile_mgmt_section');
+document.getElementById('user_profile_btn').addEventListener('click', function () {
+  toggleSection('user_profile_btn', 'profile_mgmt_section');
 });
 
-function toggleSection(sectionId) {
-  // Hide all sections
+
+function toggleSection(buttonId, sectionId) {
+  // Deactivate all icons
+  document.querySelectorAll('.header_icons div').forEach(icon => {
+    icon.classList.remove('active');
+  });
+
+  // Deactivate all sections
   document.querySelectorAll('.section').forEach(section => {
     section.classList.remove('active');
   });
 
-  // Show the selected section
+  // Activate the clicked icon and corresponding section
+  document.getElementById(buttonId).classList.add('active');
   document.getElementById(sectionId).classList.add('active');
 }
 
@@ -139,17 +146,16 @@ function toggleSection(sectionId) {
   // Add event listeners to icons
   document.getElementById("community_home_btn").addEventListener("click", function() {
     setActiveIcon("community_home_btn");
-    showSection("notif_page_section"); // or the corresponding section ID
   });
 
   document.getElementById("notification_btn").addEventListener("click", function() {
     setActiveIcon("notification_btn");
-    showSection("messages_page_section");
+    showSection("notif_page_section");
   });
 
   document.getElementById("messages_page_btn").addEventListener("click", function() {
     setActiveIcon("messages_page_btn");
-    showSection("profile_mgmt_section");
+    showSection("messages_page_section");
   });
 
   document.getElementById("user_profile_btn").addEventListener("click", function() {
@@ -232,16 +238,36 @@ function toggleMenu(postElement) {
 }
 
 
-// Close the menu when clicking outside of it
+// Close the menu when clicking outside of any menu icon or menu options
 document.addEventListener('click', function(event) {
-  const menuIcon = document.querySelector('.menu-icon');
-  const menuOptions = document.querySelector('.menu-options');
-  
-  // Close the menu if the click is outside the menu icon and menu options
-  if (!menuIcon.contains(event.target) && !menuOptions.contains(event.target)) {
-      menuOptions.classList.remove('show');
+  // Select all menu icons and options
+  const allMenuIcons = document.querySelectorAll('.menu-icon');
+  const allMenuOptions = document.querySelectorAll('.menu-options');
+
+  let clickedInsideMenu = false;
+
+  // Check if the click is inside any menu icon or menu options
+  allMenuIcons.forEach(menuIcon => {
+    if (menuIcon.contains(event.target)) {
+      clickedInsideMenu = true;
+    }
+  });
+
+  allMenuOptions.forEach(menuOption => {
+    if (menuOption.contains(event.target)) {
+      clickedInsideMenu = true;
+    }
+  });
+
+  // If the click is outside, close all menus
+  if (!clickedInsideMenu) {
+    allMenuOptions.forEach(menuOption => {
+      menuOption.classList.remove('show');
+      menuOption.style.display = 'none';
+    });
   }
 });
+
 
 function submitQuery(username, time, description, post_id, student_id) {
 

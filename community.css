@@ -117,7 +117,8 @@ img {
     width: 100%;
 }
 #back_btn {
-    font-size: 30px;
+    width: 30px;
+    height: 30px;
     font-weight: bold; 
     border: none;
     color: black;
@@ -294,11 +295,12 @@ background-color: #4CAF50;
 
 .menu-icon {
     position: absolute;
-    top: 20px;
+    top: 10px;
     right: 20px;
     cursor: pointer;
     font-size: 20px;
     color: #333;
+    padding: 4px;
 }
 
 .menu-options {
