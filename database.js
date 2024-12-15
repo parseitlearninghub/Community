@@ -27,11 +27,15 @@ const dbRef = ref(database);
 
 const studentId = localStorage.getItem("user-parser");
 
+
+
+
+
 const overlay = document.getElementById("overlay");
 const queryModal = document.getElementById("queryModal");
 const answersModal = document.getElementById("answersModal");
 let activeFeed = null; 
-
+//executed when clicking the have a question div
 document.getElementById("postbtn").addEventListener("click", function() {
   overlay.classList.add("active");
   queryModal.classList.add("active");
@@ -57,6 +61,8 @@ function closeModal() {
   queryModal.classList.remove("active");
 }
 
+document.getElementById("close_btn").addEventListener("click", closeModal);
+
 // Consolidated toggle logic
 function toggleSection(buttonId, sectionId) {
   const icons = document.querySelectorAll('.header_icons div');
@@ -71,7 +77,6 @@ function toggleSection(buttonId, sectionId) {
   document.getElementById(sectionId).classList.add('active');
 }
 
-//to handle events for all buttons
 function setupToggleEvent(buttonId, sectionId) {
   document.getElementById(buttonId).addEventListener('click', () => {
     toggleSection(buttonId, sectionId);
@@ -109,75 +114,9 @@ async function getParser(student_id) {
     }
   });
 }
+getParser(studentId);
 
 const feedContainer = document.getElementById("feedContainer");
-
-// function openMenu(menuElement) {
-//   const menu = menuElement.querySelector('.menu-options');
-//   if (menu.classList.contains('show')) {
-//       menu.classList.remove('show');
-//       menu.style.display = 'none';
-//   } else {
-//       const allMenus = document.querySelectorAll('.menu-options');
-//       allMenus.forEach((m) => {
-//           m.classList.remove('show');
-//           m.style.display = 'none'; 
-//       });
-//       menu.classList.add('show');
-//       menu.style.display = 'flex'; 
-//   }
-
-// }
-
-function toggleMenu(postElement) {
-  // Find the menu associated with the current post
-  const menu = postElement.querySelector('.menu-options');
-  if (menu.classList.contains('show')) {
-      menu.classList.remove('show');
-      menu.style.display = 'none';
-  } else {
-      menu.classList.add('show');
-      menu.style.display = 'flex'; // Show the menu for the clicked post
-  }
-
-  // Close all other menus
-  const allMenus = document.querySelectorAll('.menu-options');
-  allMenus.forEach((m) => {
-      if (m !== menu) {
-          m.classList.remove('show');
-          m.style.display = 'none';
-      }
-  });
-}
-
-// Close the menu when clicking outside of any menu icon
-document.addEventListener('click', function(event) {
-  const allMenuIcons = document.querySelectorAll('.menu-icon');
-  const allMenuOptions = document.querySelectorAll('.menu-options');
-
-  let clickedInsideMenu = false;
-
-  // Check if the click is inside any menu icon/ menu options
-  allMenuIcons.forEach(menuIcon => {
-    if (menuIcon.contains(event.target)) {
-      clickedInsideMenu = true;
-    }
-  });
-
-  allMenuOptions.forEach(menuOption => {
-    if (menuOption.contains(event.target)) {
-      clickedInsideMenu = true;
-    }
-  });
-
-  // If the click is outside, close all menus
-  if (!clickedInsideMenu) {
-    allMenuOptions.forEach(menuOption => {
-      menuOption.classList.remove('show');
-      menuOption.style.display = 'none';
-    });
-  }
-});
 
 document.getElementById("post_query_btn").addEventListener("click", function () {
   const student_id = studentId;
@@ -293,27 +232,6 @@ document.addEventListener("DOMContentLoaded", function () {
   loadPosts(student_id);
 });
 
-function getCurrentTime() {
-  const now = new Date();
-  
-  const monthNames = [
-    "January", "February", "March", "April", "May", "June", 
-    "July", "August", "September", "October", "November", "December"
-  ];
-
-  const month = monthNames[now.getMonth()];
-  const day = String(now.getDate()).padStart(2, "0");
-  const year = now.getFullYear();
-
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
-  const ampm = hours >= 12 ? "PM" : "AM";
-  const formattedHours = hours % 12 || 12;
-  const formattedMinutes = String(minutes).padStart(2, "0");
-
-  return `${month} ${day}, ${year} ${formattedHours}:${formattedMinutes} ${ampm}`;
-}
-
 console.log("Active Post ID:", active_post_id);
 console.log("Answers being loaded for Post ID:", postId);
 function postComment(student_id, username, content) {
@@ -412,6 +330,60 @@ function loadAnswers(postId) {
 
 
 
+
+
+
+//FUNCTIONS FOR EDIT AND REPORT 
+
+function toggleMenu(postElement) {
+  // Find the menu associated with the current post
+  const menu = postElement.querySelector('.menu-options');
+  if (menu.classList.contains('show')) {
+      menu.classList.remove('show');
+      menu.style.display = 'none';
+  } else {
+      menu.classList.add('show');
+      menu.style.display = 'flex'; // Show the menu for the clicked post
+  }
+
+  // Close all other menus
+  const allMenus = document.querySelectorAll('.menu-options');
+  allMenus.forEach((m) => {
+      if (m !== menu) {
+          m.classList.remove('show');
+          m.style.display = 'none';
+      }
+  });
+}
+
+// Close the menu when clicking outside of any menu icon
+document.addEventListener('click', function(event) {
+  const allMenuIcons = document.querySelectorAll('.menu-icon');
+  const allMenuOptions = document.querySelectorAll('.menu-options');
+
+  let clickedInsideMenu = false;
+
+  // Check if the click is inside any menu icon/ menu options
+  allMenuIcons.forEach(menuIcon => {
+    if (menuIcon.contains(event.target)) {
+      clickedInsideMenu = true;
+    }
+  });
+
+  allMenuOptions.forEach(menuOption => {
+    if (menuOption.contains(event.target)) {
+      clickedInsideMenu = true;
+    }
+  });
+
+  // If the click is outside, close all menus
+  if (!clickedInsideMenu) {
+    allMenuOptions.forEach(menuOption => {
+      menuOption.classList.remove('show');
+      menuOption.style.display = 'none';
+    });
+  }
+});
 
 // Edit Post Functionality
 function editPost(postId) {
