@@ -329,7 +329,26 @@ function loadAnswers(postId) {
 }
 
 
+function getCurrentTime() {
+  const now = new Date();
+  
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June", 
+    "July", "August", "September", "October", "November", "December"
+  ];
 
+  const month = monthNames[now.getMonth()];
+  const day = String(now.getDate()).padStart(2, "0");
+  const year = now.getFullYear();
+
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const formattedHours = hours % 12 || 12;
+  const formattedMinutes = String(minutes).padStart(2, "0");
+
+  return `${month} ${day}, ${year} ${formattedHours}:${formattedMinutes} ${ampm}`;
+}
 
 
 
