@@ -9,12 +9,8 @@ import {
   set,
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
 
-/// Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCFqgbA_t3EBVO21nW70umJOHX3UdRr9MY",
   authDomain: "parseit-8021e.firebaseapp.com",
@@ -25,33 +21,22 @@ const firebaseConfig = {
   appId: "1:15166597986:web:04b0219b1733780ae61a3b"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const dbRef = ref(database);
-getParser(localStorage.getItem("user-parser"));
 
-//for reload purposes
-document.getElementById("community_home_btn").addEventListener("click", function () {
-  location.reload();
-});
+const studentId = localStorage.getItem("user-parser");
+
 const overlay = document.getElementById("overlay");
 const queryModal = document.getElementById("queryModal");
 const answersModal = document.getElementById("answersModal");
-const closeModalBtn = document.querySelector(".query-close-button");
-const closeAnswersBtn = document.querySelector(".answers-close-button");
 let activeFeed = null; 
 
 document.getElementById("postbtn").addEventListener("click", function() {
   overlay.classList.add("active");
-    queryModal.classList.add("active");
+  queryModal.classList.add("active");
 });
-
-document.getElementById("close_btn").addEventListener("click", function() {
-  overlay.classList.remove("active");
-  queryModal.classList.remove("active");
-});
-
+// open the answer section
 function openAnswersModal(feedElement, postId) {
   localStorage.setItem("active_post_id", postId);
   overlay.classList.add("active");
@@ -59,116 +44,50 @@ function openAnswersModal(feedElement, postId) {
   activeFeed = feedElement; 
   loadAnswers(postId);
 }
-
+//close the answer section
 document.getElementById("close_answermodal").addEventListener("click", function() {
   overlay.classList.remove("active");
   answersModal.classList.remove("active");
   activeFeed = null;
 });
 
-document.getElementById("post_query_btn").addEventListener("click", function () {
-  const student_id = localStorage.getItem("user-parser")
-  const time = getCurrentTime();
-  const post_id = Date.now().toString();
-  const description = document.getElementById("queryDescription").value;
-  if (description.trim() === "") {
-    alert("Query description cannot be empty.");
-    return;
-  }
-
-  submitQuery(localStorage.getItem("student_username"), time, description, post_id, student_id);
-
-  // Clear the input field and close the modal after posting
-  document.getElementById("queryDescription").value = ""; 
-  closeModal(); 
-  loadPosts();
-})
-
+// to close the post query section
 function closeModal() {
   overlay.classList.remove("active");
   queryModal.classList.remove("active");
 }
 
-document.getElementById('notification_btn').addEventListener('click', function () {
-  toggleSection('notification_btn', 'notif_page_section');
-});
-
-document.getElementById('messages_page_btn').addEventListener('click', function () {
-  toggleSection('messages_page_btn', 'messages_page_section');
-});
-
-document.getElementById('user_profile_btn').addEventListener('click', function () {
-  toggleSection('user_profile_btn', 'profile_mgmt_section');
-});
-
-
+// Consolidated toggle logic
 function toggleSection(buttonId, sectionId) {
-  // Deactivate all icons
-  document.querySelectorAll('.header_icons div').forEach(icon => {
-    icon.classList.remove('active');
-  });
+  const icons = document.querySelectorAll('.header_icons div');
+  const sections = document.querySelectorAll('.section');
 
-  // Deactivate all sections
-  document.querySelectorAll('.section').forEach(section => {
-    section.classList.remove('active');
-  });
+  // Deactivate all icons and sections
+  icons.forEach(icon => icon.classList.remove('active'));
+  sections.forEach(section => section.classList.remove('active'));
 
   // Activate the clicked icon and corresponding section
   document.getElementById(buttonId).classList.add('active');
   document.getElementById(sectionId).classList.add('active');
 }
 
- const icons = document.querySelectorAll('.header_icons div');
-  const sections = document.querySelectorAll('.section');
-
-  // Function to check and toggle active class on icons
-  function setActiveIcon(iconId) {
-    icons.forEach(icon => {
-      if (icon.id === iconId) {
-        icon.classList.add('active');
-      } else {
-        icon.classList.remove('active');
-      }
-    });
-  }
-
-  function showSection(sectionId) {
-    sections.forEach(section => {
-      if (section.classList.contains(sectionId)) {
-        section.classList.add('active');
-      } else {
-        section.classList.remove('active');
-      }
-    });
-  }
-
-  // Add event listeners to icons
-  document.getElementById("community_home_btn").addEventListener("click", function() {
-    setActiveIcon("community_home_btn");
+//to handle events for all buttons
+function setupToggleEvent(buttonId, sectionId) {
+  document.getElementById(buttonId).addEventListener('click', () => {
+    toggleSection(buttonId, sectionId);
   });
+}
 
-  document.getElementById("notification_btn").addEventListener("click", function() {
-    setActiveIcon("notification_btn");
-    showSection("notif_page_section");
-  });
-
-  document.getElementById("messages_page_btn").addEventListener("click", function() {
-    setActiveIcon("messages_page_btn");
-    showSection("messages_page_section");
-  });
-
-  document.getElementById("user_profile_btn").addEventListener("click", function() {
-    setActiveIcon("user_profile_btn");
-    showSection("profile_mgmt_section");
-  });
+setupToggleEvent('notification_btn', 'notif_page_section');
+setupToggleEvent('messages_page_btn', 'messages_page_section');
+setupToggleEvent('user_profile_btn', 'profile_mgmt_section');
+setupToggleEvent('community_home_btn', 'community_home_section');
 
 const username = localStorage.getItem("student_username");
-
-// Check if username exists, then update the DOM
 if (username) {
     document.getElementById('username-placeholder').textContent = username;
 } else {
-    console.error("Username not found.");
+  document.getElementById('username-placeholder').textContent = "Parser";
 }
 
 async function getParser(student_id) {
@@ -193,28 +112,26 @@ async function getParser(student_id) {
 
 const feedContainer = document.getElementById("feedContainer");
 
-function openMenu(menuElement) {
-  const menu = menuElement.querySelector('.menu-options');
-  if (menu.classList.contains('show')) {
-      menu.classList.remove('show');
-      menu.style.display = 'none';
-  } else {
-      const allMenus = document.querySelectorAll('.menu-options');
-      allMenus.forEach((m) => {
-          m.classList.remove('show');
-          m.style.display = 'none'; 
-      });
-      menu.classList.add('show');
-      menu.style.display = 'flex'; 
-  }
+// function openMenu(menuElement) {
+//   const menu = menuElement.querySelector('.menu-options');
+//   if (menu.classList.contains('show')) {
+//       menu.classList.remove('show');
+//       menu.style.display = 'none';
+//   } else {
+//       const allMenus = document.querySelectorAll('.menu-options');
+//       allMenus.forEach((m) => {
+//           m.classList.remove('show');
+//           m.style.display = 'none'; 
+//       });
+//       menu.classList.add('show');
+//       menu.style.display = 'flex'; 
+//   }
 
-}
+// }
 
 function toggleMenu(postElement) {
   // Find the menu associated with the current post
   const menu = postElement.querySelector('.menu-options');
-  
-  // Toggle the visibility of the menu
   if (menu.classList.contains('show')) {
       menu.classList.remove('show');
       menu.style.display = 'none';
@@ -228,20 +145,19 @@ function toggleMenu(postElement) {
   allMenus.forEach((m) => {
       if (m !== menu) {
           m.classList.remove('show');
-          m.style.display = 'none'; // Hide all other menus
+          m.style.display = 'none';
       }
   });
 }
 
-// Close the menu when clicking outside of any menu icon or menu options
+// Close the menu when clicking outside of any menu icon
 document.addEventListener('click', function(event) {
-  // Select all menu icons and options
   const allMenuIcons = document.querySelectorAll('.menu-icon');
   const allMenuOptions = document.querySelectorAll('.menu-options');
 
   let clickedInsideMenu = false;
 
-  // Check if the click is inside any menu icon or menu options
+  // Check if the click is inside any menu icon/ menu options
   allMenuIcons.forEach(menuIcon => {
     if (menuIcon.contains(event.target)) {
       clickedInsideMenu = true;
@@ -263,6 +179,24 @@ document.addEventListener('click', function(event) {
   }
 });
 
+document.getElementById("post_query_btn").addEventListener("click", function () {
+  const student_id = studentId;
+  const time = getCurrentTime();
+  const post_id = Date.now().toString();
+  const description = document.getElementById("queryDescription").value;
+  if (description.trim() === "") {
+    alert("Query description cannot be empty.");
+    return;
+  }
+
+submitQuery(localStorage.getItem("student_username"), time, description, post_id, student_id);
+
+  // Clear the input field and close the modal after posting
+  document.getElementById("queryDescription").value = ""; 
+  closeModal(); 
+  loadPosts();
+})
+
 function submitQuery(username, time, description, post_id, student_id) {
 
   // Add the post to Firebase
@@ -279,7 +213,7 @@ function submitQuery(username, time, description, post_id, student_id) {
 
 function loadPosts() {
   const postsRef = ref(database, `PARSEIT/community/posts/`);
-  const currentUserId = localStorage.getItem("user-parser");
+  const currentUserId = studentId;
   const currentUsername = localStorage.getItem("student_username"); 
 
   get(postsRef)
@@ -355,7 +289,7 @@ function loadPosts() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  const student_id = localStorage.getItem("user-parser");
+  const student_id = studentId;
   loadPosts(student_id);
 });
 
@@ -403,7 +337,7 @@ document.getElementById("answer_btn").addEventListener("click", function () {
   addAnswer();
 });
 function addAnswer() {
-  const student_id = localStorage.getItem("user-parser");
+  const student_id = studentId;
   const content = document.getElementById("newComment").value;
   if (content.trim() === "") {
     alert("Answer cannot be empty.");
@@ -437,8 +371,6 @@ async function getUsername(student_id) {
     }
   });
 }
-
-
 
 function loadAnswers(postId) {
 
@@ -478,6 +410,9 @@ function loadAnswers(postId) {
       });
 }
 
+
+
+
 // Edit Post Functionality
 function editPost(postId) {
   const newDescription = prompt("Edit your post:");
@@ -511,18 +446,3 @@ function reportPost(postId) {
           });
   }
 }
-
-overlay.addEventListener("click", () => {
-    closeModal();
-    closeAnswersModal();
-});
-
-const images = document.querySelectorAll('.header_icons img');
-
-images.forEach(img => {
-    img.addEventListener('click', function() {
-        images.forEach(image => image.classList.remove('active'));
-        
-        this.classList.add('active');
-    });
-});
