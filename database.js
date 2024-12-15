@@ -132,7 +132,6 @@ function toggleSection(buttonId, sectionId) {
     });
   }
 
-  // Function to toggle sections
   function showSection(sectionId) {
     sections.forEach(section => {
       if (section.classList.contains(sectionId)) {
@@ -163,8 +162,6 @@ function toggleSection(buttonId, sectionId) {
     showSection("profile_mgmt_section");
   });
 
-
-
 const username = localStorage.getItem("student_username");
 
 // Check if username exists, then update the DOM
@@ -173,7 +170,6 @@ if (username) {
 } else {
     console.error("Username not found.");
 }
-
 
 async function getParser(student_id) {
   const postsRef = ref(database, `PARSEIT/username/`);
@@ -237,7 +233,6 @@ function toggleMenu(postElement) {
   });
 }
 
-
 // Close the menu when clicking outside of any menu icon or menu options
 document.addEventListener('click', function(event) {
   // Select all menu icons and options
@@ -267,7 +262,6 @@ document.addEventListener('click', function(event) {
     });
   }
 });
-
 
 function submitQuery(username, time, description, post_id, student_id) {
 
@@ -359,9 +353,6 @@ function loadPosts() {
       console.error("Error loading posts:", error);
     });
 }
-
-
-
 
 document.addEventListener("DOMContentLoaded", function () {
   const student_id = localStorage.getItem("user-parser");
@@ -521,13 +512,10 @@ function reportPost(postId) {
   }
 }
 
-
-
 overlay.addEventListener("click", () => {
     closeModal();
     closeAnswersModal();
 });
-
 
 const images = document.querySelectorAll('.header_icons img');
 
