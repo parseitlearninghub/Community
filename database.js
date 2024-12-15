@@ -26,15 +26,16 @@ const database = getDatabase(app);
 const dbRef = ref(database);
 
 const studentId = localStorage.getItem("user-parser");
-
-
-
-
-
 const overlay = document.getElementById("overlay");
 const queryModal = document.getElementById("queryModal");
 const answersModal = document.getElementById("answersModal");
 let activeFeed = null; 
+
+document.getElementById("community_home_btn").addEventListener("click", function () {
+  location.reload();
+});
+
+
 //executed when clicking the have a question div
 document.getElementById("postbtn").addEventListener("click", function() {
   overlay.classList.add("active");
@@ -232,43 +233,88 @@ document.addEventListener("DOMContentLoaded", function () {
   loadPosts(student_id);
 });
 
-console.log("Active Post ID:", active_post_id);
-console.log("Answers being loaded for Post ID:", postId);
+// The function to post a comment (answer) to the correct post in Firebase
 function postComment(student_id, username, content) {
   const answer_id = Date.now().toString();
   const active_post = localStorage.getItem("active_post_id");
+
+  if (!active_post) {
+    alert("No active post found.");
+    return;
+  }
+
+  // Adding the answer to the correct post's answers
   update(ref(database, `PARSEIT/community/posts/${active_post}/answers/${answer_id}`), {
-      student_id: student_id,
-      content: content,
-      username: username,
-      time: getCurrentTime(),
+    student_id: student_id,
+    content: content,
+    username: username,
+    time: getCurrentTime(),
   })
-      .then(() => console.log("Answer posted successfully"))
-      .catch((error) => {
-          console.error("Error posting answer:", error);
-          alert("Failed to post answer. Please try again.");
-      });
+  .then(() => {
+    console.log("Answer posted successfully");
+    loadAnswers(active_post);  // Reload the answers for the active post after posting a comment
+  })
+  .catch((error) => {
+    console.error("Error posting answer:", error);
+    alert("Failed to post answer. Please try again.");
+  });
 }
 
-
+// Event listener for adding a comment (answer)
 document.getElementById("answer_btn").addEventListener("click", function () {
   addAnswer();
 });
+
 function addAnswer() {
   const student_id = studentId;
   const content = document.getElementById("newComment").value;
+
   if (content.trim() === "") {
     alert("Answer cannot be empty.");
     return;
   }
+ // Post the answer to Firebase
+ postComment(student_id, localStorage.getItem("student_username"), content);
 
-  postComment(student_id, localStorage.getItem("student_username"), content);
-  document.getElementById("newComment").value = "";
-  const active_post_id = localStorage.getItem("active_post_id");
-  loadAnswers(active_post_id); 
+ // Clear the input field after posting the answer
+ document.getElementById("newComment").value = "";
 }
 
-localStorage.getItem("active_post_id")
+// Function to load answers for the active post
+function loadAnswers(postId) {
+ if (!postId) {
+   console.error("No active post ID found.");
+   return;
+ }
+
+ const answersRef = ref(database, `PARSEIT/community/posts/${postId}/answers/`);
+ get(answersRef)
+   .then((snapshot) => {
+     const modalBody = document.querySelector(".answer-modal-body");
+     modalBody.innerHTML = ""; // Clear previous answers
+
+     if (snapshot.exists()) {
+       const answers = snapshot.val();
+       Object.keys(answers).forEach((answerId) => {
+         const answer = answers[answerId];
+         const answerElement = document.createElement("div");
+         answerElement.classList.add("answer");
+         answerElement.innerHTML = `
+           <div class="answer-header">
+             <strong>${answer.username}</strong> <small>${answer.time}</small>
+           </div>
+           <p>${answer.content}</p>
+         `;
+         modalBody.appendChild(answerElement);
+       });
+     } else {
+       modalBody.innerHTML = "<p>No answers yet. Be the first to answer!</p>";
+     }
+   })
+   .catch((error) => {
+     console.error("Error loading answers:", error);
+   });
+}
 
 async function getUsername(student_id) {
   const postsRef = ref(database, `PARSEIT/username/`);
@@ -290,43 +336,44 @@ async function getUsername(student_id) {
   });
 }
 
-function loadAnswers(postId) {
+// function loadAnswers(postId) {
 
-  const active_post_id = localStorage.getItem("active_post_id");
+//   const active_post_id = localStorage.getItem("active_post_id");
 
-  if (!active_post_id) {
-      console.error("No active post ID found in localStorage.");
-      return;
-  }
-  const answersRef = ref(database, `PARSEIT/community/posts/${postId}/answers/`);
+//   if (!active_post_id) {
+//       console.error("No active post ID found in localStorage.");
+//       return;
+//   }
+//   const answersRef = ref(database, `PARSEIT/community/posts/${postId}/answers/`);
 
-  get(answersRef)
-      .then((snapshot) => {
-          const modalBody = document.querySelector(".answers-modal .modal-body");
-          modalBody.innerHTML = ""; 
+//   get(answersRef)
+//       .then((snapshot) => {
+//           const modalBody = document.querySelector(".answers-modal .modal-body");
+//           modalBody.innerHTML = ""; 
 
-          if (snapshot.exists()) {
-              const answers = snapshot.val();
-              Object.keys(answers).forEach((answerId) => {
-                  const answer = answers[answerId];
-                  const answerElement = document.createElement("div");
-                  answerElement.classList.add("answer");
-                  answerElement.innerHTML = `
-                      <div class="answer-header">
-                          <strong>${answer.username}</strong> <small>${answer.time}</small>
-                      </div>
-                      <p>${answer.content}</p>
-                  `;
-                  modalBody.appendChild(answerElement);
-              });
-          } else {
-              modalBody.innerHTML = "<p>No answers yet. Be the first to answer!</p>";
-          }
-      })
-      .catch((error) => {
-          console.error("Error loading answers:", error);
-      });
-}
+//           if (snapshot.exists()) {
+//               const answers = snapshot.val();
+//               Object.keys(answers).forEach((answerId) => {
+//                   const answer = answers[answerId];
+//                   const answerElement = document.createElement("div");
+//                   answerElement.classList.add("answer");
+//                   answerElement.innerHTML = `
+//                       <div class="answer-header">
+//                           <strong>${answer.username}</strong> <small>${answer.time}</small>
+//                       </div>
+//                       <p>${answer.content}</p>
+//                   `;
+//                   modalBody.appendChild(answerElement);
+//               });
+//           } else {
+//               modalBody.innerHTML = "<p>No answers yet. Be the first to answer!</p>";
+//           }
+//       })
+//       .catch((error) => {
+//           console.error("Error loading answers:", error);
+//       });
+// }
+
 
 
 function getCurrentTime() {
@@ -350,10 +397,7 @@ function getCurrentTime() {
   return `${month} ${day}, ${year} ${formattedHours}:${formattedMinutes} ${ampm}`;
 }
 
-
-
 //FUNCTIONS FOR EDIT AND REPORT 
-
 function toggleMenu(postElement) {
   // Find the menu associated with the current post
   const menu = postElement.querySelector('.menu-options');
