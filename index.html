@@ -5,13 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Community</title>
     <link rel="stylesheet" href="community.css" />
-    <!-- <script defer src="community.js"></script> -->
-   
   </head>
   <body>
  
-    <div id="overlay"></div>
-
     <!-- Feeds Section -->
     <div class="feeds">
       <div class="community_header">
@@ -33,49 +29,46 @@
           </div>
         </div>
       </div>
-      <!-- Full-Screen Sections -->
-  <div class="section notif_page_section" id="notif_page_section">
-    Notifications Section
-  </div>
-  <div class="section messages_page_section" id="messages_page_section">
-    Messages Section
-  </div>
-  <div class="section profile_mgmt_section" id="profile_mgmt_section">
-    Profile Management Section
-  </div>
 
-      <div class="subheader">
-        <div class="top-profile-pic">
-          <img src="images/profile-pic.jpg" alt="Profile Picture" />
-        </div>
-        <div class="post-query-text" id="postbtn">
-          <div id="question-text">Have a question, <span id="username-placeholder"></span>?</div>
+      <!-- Full-Screen Sections for other features -->
+    <div class="section notif_page_section" id="notif_page_section">
+      Notifications Section
+    </div>
+    <div class="section messages_page_section" id="messages_page_section">
+      Messages Section
+    </div>
+    <div class="section profile_mgmt_section" id="profile_mgmt_section">
+      Profile Management Section
+    </div>
 
-        </div>
-        <!-- <button class="btn" id="postbtn">
-          Post Query
-        </button> -->
+    <div class="subheader">
+      <div class="top-profile-pic">
+        <img src="images/profile-pic.jpg" alt="Profile Picture" />
       </div>
+      <div class="post-query-text" id="postbtn">
+        <div id="question-text">Have a question, <span id="username-placeholder"></span>?</div>
+      </div>
+    </div>
 
-      <!-- Feed Posts Container -->
+      <!-- Container for each post -->
       <div id="feedContainer">
       </div>
     </div>
     
-
-    <!-- Post Query Modal -->
+    <!-- Pop up for posting a query -->
     <div class="query-modal" id="queryModal">
       <button class="query-close-button" id="close_btn"><img src="images/close-button.png" alt=""></button>
       <h2>Post Your Query</h2>
       <textarea class="post-content"
-        id="queryDescription"
+        id="queryDescription" data-gramm="false"
         placeholder="Describe your query in detail"
       ></textarea>
-
-      <button id="post_query_btn">Post</button>
+      <div class="modal-footer">
+        <button id="post_query_btn">Post Query</button>
+    </div>
     </div>
 
-    <!-- Answers/Comments Modal -->
+    <!-- Answers Pop-up/Modal -->
     <div class="answers-modal" id="answersModal">
       <button class="answers-close-button" id="close_answermodal">
         <img src="images/close-button.png" alt="">
@@ -84,11 +77,12 @@
       <div class="answer-modal-body">
     </div>
     <div class="answer-content-wrapper">
-      <textarea class="answer-content" id="newComment"></textarea>
+      <textarea class="answer-content" id="newComment" data-gramm="false"></textarea>
       <button id="answer_btn" class="post-answer-btn"><img src="images/send-comment.png" alt=""></button>
     </div>
     </div>
 
+    <div id="overlay"></div>
     <script defer type="module" src="database.js" ></script>
   </body>
 </html>

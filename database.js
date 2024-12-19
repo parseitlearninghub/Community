@@ -136,7 +136,7 @@ submitQuery(localStorage.getItem("student_username"), time, description, post_id
   closeModal(); 
   loadPosts();
 })
-
+const time = Date.now(); // Current time as a numeric timestamp
 function submitQuery(username, time, description, post_id, student_id) {
 
   // Add the post to Firebase
@@ -224,7 +224,7 @@ function loadPosts() {
       }
     })
     .catch((error) => {
-      console.error("Error loading posts:", error);
+      alert("Error loading posts:", error);
     });
 }
 
@@ -242,6 +242,7 @@ function postComment(student_id, username, content) {
     alert("No active post found.");
     return;
   }
+
 
   // Adding the answer to the correct post's answers
   update(ref(database, `PARSEIT/community/posts/${active_post}/answers/${answer_id}`), {
@@ -281,41 +282,70 @@ function addAnswer() {
 }
 
 // Function to load answers for the active post
-function loadAnswers(postId) {
- if (!postId) {
-   console.error("No active post ID found.");
-   return;
- }
+// Helper function to calculate relative time
+function timeAgo(timestamp) {
+  if (!timestamp || isNaN(Number(timestamp))) {
+      return "Invalid time";
+  }
 
- const answersRef = ref(database, `PARSEIT/community/posts/${postId}/answers/`);
- get(answersRef)
-   .then((snapshot) => {
-     const modalBody = document.querySelector(".answer-modal-body");
-     modalBody.innerHTML = ""; // Clear previous answers
+  const now = Date.now(); // Current time in milliseconds
+  const difference = now - Number(timestamp); // Difference in milliseconds
 
-     if (snapshot.exists()) {
-       const answers = snapshot.val();
-       Object.keys(answers).forEach((answerId) => {
-         const answer = answers[answerId];
-         const answerElement = document.createElement("div");
-         answerElement.classList.add("answer");
-         answerElement.innerHTML = `
-           <div class="answer-header">
-             <strong>${answer.username}</strong> <small>${answer.time}</small>
-           </div>
-           <p>${answer.content}</p>
-         `;
-         modalBody.appendChild(answerElement);
-       });
-     } else {
-       modalBody.innerHTML = "<p>No answers yet. Be the first to answer!</p>";
-     }
-   })
-   .catch((error) => {
-     console.error("Error loading answers:", error);
-   });
+  const seconds = Math.floor(difference / 1000);
+  if (seconds < 60) return "Just now";
+
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days} day${days > 1 ? "s" : ""} ago`;
+
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months} month${months > 1 ? "s" : ""} ago`;
+
+  const years = Math.floor(months / 12);
+  return `${years} year${years > 1 ? "s" : ""} ago`;
 }
 
+
+// Updated loadAnswers function
+function loadAnswers(postId) {
+  if (!postId) {
+    console.error("No active post ID found.");
+    return;
+  }
+
+  const answersRef = ref(database, `PARSEIT/community/posts/${postId}/answers/`);
+  get(answersRef)
+    .then((snapshot) => {
+      const modalBody = document.querySelector(".answer-modal-body");
+      modalBody.innerHTML = ""; // Clear previous answers
+
+      if (snapshot.exists()) {
+        const answers = snapshot.val();
+        Object.keys(answers).forEach((answerId) => {
+          const answer = answers[answerId];
+          const answerElement = document.createElement("div");
+          answerElement.classList.add("answer");
+          answerElement.innerHTML = `
+            <div class="answer-header">
+              <strong>${answer.username}</strong> <small>${answer.time}</small>
+            </div>
+            <p class="community-answers">${answer.content}</p>
+          `;
+          modalBody.appendChild(answerElement);
+        });
+      } else {
+        modalBody.innerHTML = "<p>No answers yet. Be the first to answer!</p>";
+      }
+    })
+    .catch((error) => {
+      console.error("Error loading answers:", error);
+    });
+}
 async function getUsername(student_id) {
   const postsRef = ref(database, `PARSEIT/username/`);
 
@@ -336,66 +366,21 @@ async function getUsername(student_id) {
   });
 }
 
-// function loadAnswers(postId) {
-
-//   const active_post_id = localStorage.getItem("active_post_id");
-
-//   if (!active_post_id) {
-//       console.error("No active post ID found in localStorage.");
-//       return;
-//   }
-//   const answersRef = ref(database, `PARSEIT/community/posts/${postId}/answers/`);
-
-//   get(answersRef)
-//       .then((snapshot) => {
-//           const modalBody = document.querySelector(".answers-modal .modal-body");
-//           modalBody.innerHTML = ""; 
-
-//           if (snapshot.exists()) {
-//               const answers = snapshot.val();
-//               Object.keys(answers).forEach((answerId) => {
-//                   const answer = answers[answerId];
-//                   const answerElement = document.createElement("div");
-//                   answerElement.classList.add("answer");
-//                   answerElement.innerHTML = `
-//                       <div class="answer-header">
-//                           <strong>${answer.username}</strong> <small>${answer.time}</small>
-//                       </div>
-//                       <p>${answer.content}</p>
-//                   `;
-//                   modalBody.appendChild(answerElement);
-//               });
-//           } else {
-//               modalBody.innerHTML = "<p>No answers yet. Be the first to answer!</p>";
-//           }
-//       })
-//       .catch((error) => {
-//           console.error("Error loading answers:", error);
-//       });
-// }
-
-
 
 function getCurrentTime() {
   const now = new Date();
-  
-  const monthNames = [
-    "January", "February", "March", "April", "May", "June", 
-    "July", "August", "September", "October", "November", "December"
-  ];
 
-  const month = monthNames[now.getMonth()];
-  const day = String(now.getDate()).padStart(2, "0");
-  const year = now.getFullYear();
-
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
-  const ampm = hours >= 12 ? "PM" : "AM";
-  const formattedHours = hours % 12 || 12;
-  const formattedMinutes = String(minutes).padStart(2, "0");
-
-  return `${month} ${day}, ${year} ${formattedHours}:${formattedMinutes} ${ampm}`;
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Manila", // Specifies Philippine Time
+    month: "long",
+    day: "2-digit",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).format(now);
 }
+
 
 //FUNCTIONS FOR EDIT AND REPORT 
 function toggleMenu(postElement) {
