@@ -160,15 +160,19 @@ function loadPosts() {
     .then((snapshot) => {
       if (snapshot.exists()) {
         const posts = snapshot.val();
-        feedContainer.innerHTML = ""; 
+        feedContainer.innerHTML = ""; // Clear the container before loading new posts
 
         Object.keys(posts).forEach((postId) => {
           const post = posts[postId];
-
+          console.log("Post time:", post.time);
           const menuId = `menu-${postId}`;
           const editId = `edit-${postId}`;
           const reportId = `report-${postId}`;
           const answerId = `answer-${postId}`;
+          
+          // Get the number of answers (comments) for the post
+          const answersCount = post.answers ? Object.keys(post.answers).length : 0;
+          const answerText = answersCount === 0 ? "Answer" : `${answersCount} Answer${answersCount > 1 ? "s" : ""}`;
 
           const postElement = document.createElement("div");
           postElement.classList.add("feed");
@@ -180,7 +184,7 @@ function loadPosts() {
                 </div>
                 <div class="text">
                     <strong class="username">${post.username}</strong><br>
-                    <small class="time-posted">${post.time}</small>
+                    <small class="time-posted">${formatTime(post.time)}</small>
                 </div>
                 <div class="menu-icon" id="${menuId}">
                     &#8942; 
@@ -200,7 +204,7 @@ function loadPosts() {
                 <p>${post.description}</p>
             </div>
             <div class="feed-footer">
-                <small class="view-comments" id="${answerId}">Answer</small>
+                <small class="view-comments" id="${answerId}">${answerText}</small>
             </div>
             <div class="comments"></div> <!-- Comments container -->
           `;
@@ -249,7 +253,7 @@ function postComment(student_id, username, content) {
     student_id: student_id,
     content: content,
     username: username,
-    time: getCurrentTime(),
+    time: Number(getCurrentTime()),
   })
   .then(() => {
     console.log("Answer posted successfully");
@@ -284,12 +288,14 @@ function addAnswer() {
 // Function to load answers for the active post
 // Helper function to calculate relative time
 function timeAgo(timestamp) {
-  if (!timestamp || isNaN(Number(timestamp))) {
+  // Ensure the timestamp is a valid number
+  const timestampNumber = Number(timestamp);
+  if (isNaN(timestampNumber)) {
       return "Invalid time";
   }
 
   const now = Date.now(); // Current time in milliseconds
-  const difference = now - Number(timestamp); // Difference in milliseconds
+  const difference = now - timestampNumber; // Difference in milliseconds
 
   const seconds = Math.floor(difference / 1000);
   if (seconds < 60) return "Just now";
@@ -311,6 +317,7 @@ function timeAgo(timestamp) {
 }
 
 
+
 // Updated loadAnswers function
 function loadAnswers(postId) {
   if (!postId) {
@@ -328,11 +335,15 @@ function loadAnswers(postId) {
         const answers = snapshot.val();
         Object.keys(answers).forEach((answerId) => {
           const answer = answers[answerId];
+
+          // Format the time using the timeAgo function
+          const formattedTime = timeAgo(answer.time);
+
           const answerElement = document.createElement("div");
           answerElement.classList.add("answer");
           answerElement.innerHTML = `
             <div class="answer-header">
-              <strong>${answer.username}</strong> <small>${answer.time}</small>
+              <strong>${answer.username}</strong> <small>${formattedTime}</small>
             </div>
             <p class="community-answers">${answer.content}</p>
           `;
@@ -346,6 +357,9 @@ function loadAnswers(postId) {
       console.error("Error loading answers:", error);
     });
 }
+
+
+
 async function getUsername(student_id) {
   const postsRef = ref(database, `PARSEIT/username/`);
 
@@ -368,7 +382,17 @@ async function getUsername(student_id) {
 
 
 function getCurrentTime() {
-  const now = new Date();
+  return Date.now(); // Numeric timestamp for storage
+}
+function formatTime(timestamp) {
+  // Ensure the timestamp is a valid number
+  const timestampNumber = Number(timestamp);
+  if (isNaN(timestampNumber)) {
+    console.error("Invalid timestamp:", timestamp);
+    return "Invalid time";
+  }
+
+  const now = new Date(timestampNumber);
 
   return new Intl.DateTimeFormat("en-US", {
     timeZone: "Asia/Manila", // Specifies Philippine Time
@@ -382,6 +406,8 @@ function getCurrentTime() {
 }
 
 
+
+
 //FUNCTIONS FOR EDIT AND REPORT 
 function toggleMenu(postElement) {
   // Find the menu associated with the current post
@@ -392,6 +418,7 @@ function toggleMenu(postElement) {
   } else {
       menu.classList.add('show');
       menu.style.display = 'flex'; // Show the menu for the clicked post
+
   }
 
   // Close all other menus

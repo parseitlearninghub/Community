@@ -233,8 +233,17 @@ img {
 }
 
 .messages_page_section {
-    background-color: #2196F3;
+    background-color: #ffffff;
+    margin-top: 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #FFF;
+    width: 100%;
+    height: 95%;
 }
+
 
 .profile_mgmt_section {
     background-color: #4CAF50;
@@ -542,9 +551,10 @@ img {
 .answer-modal-body {
     position: relative;
     padding: 10px;
-    height: 100%;
+    height: 80%;
     width: 100%;
-    overflow: hidden;
+    overflow: auto;
+    margin-bottom: 20px;
 }
 
 .answer-modal-body p {
@@ -553,7 +563,7 @@ img {
 }
 
 .answer-header strong, small {
-    padding: 0.5rem;
+    padding: 0.6rem 0.3rem;
 }
 
 .community-answers {
@@ -564,6 +574,7 @@ img {
     min-width: fit-content;
     width: auto;
     display: inline-block; 
+    margin-bottom: 0.5rem;
 }
 
 .answers-close-button {
@@ -635,9 +646,10 @@ img {
     font-size: 1rem;
     resize: none;
     box-sizing: border-box;
+    border-radius: 20px;
 }
 
-.post-answer-btn {
+.post-answer-btn, .message_send_btn {
     position: absolute;
     right: 20px; 
     top: 30px; 
@@ -648,12 +660,97 @@ img {
     outline: none;
 }
 
-.post-answer-btn img {
+.post-answer-btn, .message_send_btn img {
     width: 24px; 
     height: 24px; 
     transition: transform 0.2s ease-in-out;
 }
 
-.post-answer-btn:hover img {
+.post-answer-btn, .message_send_btn:hover img {
+    transform: scale(1.2); 
+}
+
+/* messages section */
+.message_header {
+    position: fixed; 
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px 0px;
+
+    padding: 10px;
+    margin-bottom: 5px;
+    top: 0;  
+    left: 0; 
+    width: 100%; 
+    height: 50px;
+}
+
+.messages-profile-pic {
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+}
+
+.community-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.community-profile .username {
+
+}
+
+.messages-profile-pic img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px; 
+    margin-top: 4px;;
+}
+
+.message_input_wrapper {
+    position: fixed; 
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    padding: 10px;
+    margin-bottom: 5px;
+    bottom: 0;  
+    left: 0; 
+    width: 100%; 
+}
+
+.message_input {
+    width: 100%;  
+    height: 35px; 
+    border-radius: 15px;
+    padding: 0.5rem;
+    border: 0.1rem solid #a4a1a1;
+    font-size: 1rem;
+    resize: none;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.message_input:focus {
+    outline: none;
+}
+
+.message_send_btn {
+    position: absolute;
+    right: 30px; 
+    top: 20px; 
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 200; 
+    outline: none;
+}
+
+.message_send_btn img {
+    width: 18px; 
+    height: 18px; 
+    transition: transform 0.2s ease-in-out;
+    /* filter: brightness(100%) saturate(150%) hue-rotate(-10deg);  */
+}
+
+.message_send_btn:hover img {
     transform: scale(1.2); 
 }
