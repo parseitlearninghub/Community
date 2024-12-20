@@ -86,7 +86,6 @@ function setupToggleEvent(buttonId, sectionId) {
 
 setupToggleEvent('notification_btn', 'notif_page_section');
 setupToggleEvent('messages_page_btn', 'messages_page_section');
-setupToggleEvent('user_profile_btn', 'profile_mgmt_section');
 setupToggleEvent('community_home_btn', 'community_home_section');
 
 const username = localStorage.getItem("student_username");
@@ -462,21 +461,69 @@ document.addEventListener('click', function(event) {
 
 // Edit Post Functionality
 function editPost(postId) {
-  const newDescription = prompt("Edit your post:");
-  if (newDescription !== null && newDescription.trim() !== "") {
-      update(ref(database, `PARSEIT/community/posts/${postId}`), {
-          description: newDescription,
-      })
-          .then(() => {
-              alert("Post updated successfully!");
-              loadPosts(); // Reload posts
+  // Reference the modal and its elements
+  const modal = document.getElementById("queryModal");
+  const overlay = document.getElementById("overlay");
+  const descriptionField = document.getElementById("queryDescription");
+  const postButton = document.getElementById("post_query_btn");
+
+  // Fetch the current post details
+  get(ref(database, `PARSEIT/community/posts/${postId}`))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        const post = snapshot.val();
+
+        // Populate the modal with the current description
+        descriptionField.value = post.description;
+
+        // Change the button text to "Done Edit" and remove its existing event listener
+        postButton.textContent = "Done Edit";
+        postButton.replaceWith(postButton.cloneNode(true)); // Remove existing listeners
+        const newPostButton = document.getElementById("post_query_btn");
+
+        // Add a new event listener for updating the post
+        newPostButton.addEventListener("click", function handleEdit() {
+          const updatedDescription = descriptionField.value.trim();
+          if (updatedDescription === "") {
+            alert("Description cannot be empty.");
+            return;
+          }
+
+          // Update the post in Firebase
+          update(ref(database, `PARSEIT/community/posts/${postId}`), {
+            description: updatedDescription,
           })
-          .catch((error) => {
+            .then(() => {
+              alert("Post updated successfully!");
+              modal.classList.remove("active");
+              overlay.classList.remove("active");
+              loadPosts(); // Reload posts
+            })
+            .catch((error) => {
               console.error("Error updating post:", error);
               alert("Failed to update the post.");
-          });
-  }
+            });
+
+          // Restore the original button state after editing
+          newPostButton.textContent = "Post Query";
+          newPostButton.replaceWith(newPostButton.cloneNode(true)); // Remove edit listener
+        });
+
+        // Open the modal
+        overlay.classList.add("active");
+        modal.classList.add("active");
+
+        // Focus on the textarea
+        descriptionField.focus();
+      } else {
+        alert("Post not found.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching post:", error);
+    });
 }
+
 
 // Report Post Functionality
 function reportPost(postId) {
