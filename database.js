@@ -164,7 +164,6 @@ function loadPosts() {
 
         Object.keys(posts).forEach((postId) => {
           const post = posts[postId];
-          console.log("Post time:", post.time);
           const menuId = `menu-${postId}`;
           const editId = `edit-${postId}`;
           const reportId = `report-${postId}`;
@@ -495,7 +494,6 @@ function editPost(postId) {
             description: updatedDescription,
           })
             .then(() => {
-              alert("Post updated successfully!");
               modal.classList.remove("active");
               overlay.classList.remove("active");
               loadPosts(); // Reload posts
