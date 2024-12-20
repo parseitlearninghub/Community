@@ -40,7 +40,7 @@ document.getElementById("community_home_btn").addEventListener("click", function
 document.getElementById("postbtn").addEventListener("click", function() {
   overlay.classList.add("active");
   queryModal.classList.add("active");
-  document.getElementById('postdescription').value = '';
+  document.getElementById('queryDescription').value = '';
 });
 // open the answer section
 function openAnswersModal(feedElement, postId) {
