@@ -525,6 +525,10 @@ img {
     padding: 0.4rem 1rem;
 }
 
+.answer {
+    margin-bottom: 0.6rem;
+}
+
 .answer-header strong, small {
     padding: 0.6rem 0.3rem;
 }
@@ -532,11 +536,12 @@ img {
 .community-answers {
     font-family: "Inter-Regular";
     padding: 0.5rem;
-    background-color: #60585818;
+    background-color: #92929251;
     border-radius: 10px;
     min-width: fit-content;
     width: auto;
     display: inline-block; 
+    margin-top: 4px;
 }
 
 .text_reply {
@@ -632,7 +637,7 @@ img {
     height: auto;   
     min-height: 50px;
     padding: 0.5rem;
-    border: 0.1rem solid #ccc;
+    border: 0.1rem solid #b4b2b2;
     border-radius: 4px;
     font-size: 1rem;
     resize: none;
@@ -685,10 +690,6 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.community-profile .username {
-
 }
 
 .messages-profile-pic img {
