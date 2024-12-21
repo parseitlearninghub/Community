@@ -154,7 +154,7 @@ function submitQuery(username, time, description, post_id, student_id) {
 function loadPosts() {
   const postsRef = ref(database, `PARSEIT/community/posts/`);
   const currentUserId = studentId;
-  const currentUsername = localStorage.getItem("student_username"); 
+  const currentUsername = localStorage.getItem("student_username");
 
   get(postsRef)
     .then((snapshot) => {
@@ -168,7 +168,7 @@ function loadPosts() {
           const editId = `edit-${postId}`;
           const reportId = `report-${postId}`;
           const answerId = `answer-${postId}`;
-          
+
           // Get the number of answers (comments) for the post
           const answersCount = post.answers ? Object.keys(post.answers).length : 0;
           const answerText = answersCount === 0 ? "Answer" : `${answersCount} Answer${answersCount > 1 ? "s" : ""}`;
@@ -189,18 +189,15 @@ function loadPosts() {
                     &#8942; 
                     <div class="menu-options">
                         ${post.username === currentUsername ? 
-                            `<div class="menu-item" id="${editId}">
-                                <img src="images/edit_icon.png"/>
-                                Edit</div>` 
+                            `<div class="menu-item" id="${editId}">Edit</div>` 
                             : 
-                            `<div class="menu-item" id="${reportId}"> 
-                                <img src="images/report.png" />
-                                Report</div>`}
+                            `<div class="menu-item" id="${reportId}">Report</div>`}
                     </div>
                 </div>
             </div>
             <div class="post">
                 <p>${post.description}</p>
+                <span class="view-more">View More</span>
             </div>
             <div class="feed-footer">
                 <small class="view-comments" id="${answerId}">${answerText}</small>
@@ -222,6 +219,8 @@ function loadPosts() {
           }
           document.getElementById(answerId).addEventListener("click", () => openAnswersModal(postElement, postId));
         });
+
+        checkLongContent();  // Check if any post content is long after loading the posts
       } else {
         console.log("No posts available.");
       }
@@ -236,6 +235,46 @@ document.addEventListener("DOMContentLoaded", function () {
   loadPosts(student_id);
 });
 
+function toggleViewMore(feedElement) {
+  const viewMoreLink = feedElement.querySelector('.view-more');
+  feedElement.classList.toggle('expanded');
+
+  if (feedElement.classList.contains('expanded')) {
+    viewMoreLink.innerText = 'View Less';
+  } else {
+    viewMoreLink.innerText = 'View More';
+  }
+}
+
+
+// Function to check and show "View More" if content is too long
+function checkLongContent() {
+  const feedItems = document.querySelectorAll('.feed');
+  feedItems.forEach(feed => {
+    const postDescription = feed.querySelector('.post p');
+    const viewMoreLink = feed.querySelector('.view-more');
+    
+    if (postDescription.scrollHeight > postDescription.offsetHeight) {
+      viewMoreLink.classList.add('show'); // Show "View More" if content is too long
+      viewMoreLink.addEventListener('click', () => toggleViewMore(feed));
+    } else {
+      viewMoreLink.classList.remove('show'); // Hide "View More" if content fits
+    }
+  });
+}
+
+
+// Event listener for each "View More" link
+document.addEventListener('DOMContentLoaded', function() {
+  checkLongContent(); // Check for long content when the page loads
+  document.querySelectorAll('.view-more').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const feedElement = e.target.closest('.feed');
+      toggleViewMore(feedElement);
+    });
+  });
+});
+
 // The function to post a comment (answer) to the correct post in Firebase
 function postComment(student_id, username, content) {
   const answer_id = Date.now().toString();
@@ -245,7 +284,6 @@ function postComment(student_id, username, content) {
     alert("No active post found.");
     return;
   }
-
 
   // Adding the answer to the correct post's answers
   update(ref(database, `PARSEIT/community/posts/${active_post}/answers/${answer_id}`), {
@@ -315,8 +353,6 @@ function timeAgo(timestamp) {
   return `${years} year${years > 1 ? "s" : ""} ago`;
 }
 
-
-
 // Updated loadAnswers function
 function loadAnswers(postId) {
   if (!postId) {
@@ -357,8 +393,6 @@ function loadAnswers(postId) {
     });
 }
 
-
-
 async function getUsername(student_id) {
   const postsRef = ref(database, `PARSEIT/username/`);
 
@@ -378,7 +412,6 @@ async function getUsername(student_id) {
     }
   });
 }
-
 
 function getCurrentTime() {
   return Date.now(); // Numeric timestamp for storage
@@ -403,9 +436,6 @@ function formatTime(timestamp) {
     hour12: true,
   }).format(now);
 }
-
-
-
 
 //FUNCTIONS FOR EDIT AND REPORT 
 function toggleMenu(postElement) {
@@ -485,9 +515,17 @@ function editPost(postId) {
         newPostButton.addEventListener("click", function handleEdit() {
           const updatedDescription = descriptionField.value.trim();
           if (updatedDescription === "") {
-            alert("Description cannot be empty.");
+            // Add the red border and shake class
+            descriptionField.classList.add("error");
+        
+            // Remove the shake animation after it's done to allow retriggering
+            setTimeout(() => {
+                descriptionField.classList.remove("shake");
+            }, 500);
+        
+            descriptionField.classList.add("shake");
             return;
-          }
+        }
 
           // Update the post in Firebase
           update(ref(database, `PARSEIT/community/posts/${postId}`), {

@@ -225,7 +225,82 @@ img {
     margin: 0.5rem 0;
     border-radius: 8px;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    max-height: 200px;
+    overflow: hidden; /* Hide content that exceeds the height */
+    transition: max-height 0.3s ease-in-out; /* Smooth transition for height change */
 }
+.feed.expanded {
+    max-height: none;
+}
+
+
+.feed .user {
+    display: flex;
+    align-items: center
+}
+
+.feed .user .username {
+    font-size: 14px;
+}
+
+.feed .user small {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.693);
+}
+
+.feed .post {
+    margin-top: 1rem;
+    font-size: 1rem;
+}
+
+.feed .post .post-title {
+    padding-top: 10px;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+.feed .post p {
+    max-height: 100px; /* Adjust as needed */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5; /* Limit lines (adjust as needed) */
+    -webkit-box-orient: vertical;
+}
+
+.feed.expanded .post p {
+    max-height: none; /* Allow full height when expanded */
+    -webkit-line-clamp: unset;
+}
+
+.feed .view-more {
+    color: #fb3b3b9e;
+    cursor: pointer;
+    font-size: 12px;
+    display: none;
+}
+
+.feed.expanded .view-more {
+    display: none; /* Hide "View More" when expanded */
+}
+
+.feed .view-more.show {
+    display: flex; /* Show "View More" if content is too long */
+    justify-content: right;
+    padding-right: 6px;
+}
+
+.feed-footer {
+    display: flex;
+    justify-content: right;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid red;
+}
+
+.feed-footer small {
+    cursor: pointer;
+}
+
 
 .menu-icon {
     position: absolute;
@@ -276,47 +351,6 @@ img {
     display: flex;
     align-items: center;
     margin: 6px;
-}
-
-.feed .user {
-    display: flex;
-    align-items: center
-}
-
-.feed .user .username {
-    font-size: 14px;
-}
-
-.feed .user small {
-    font-size: 12px;
-    color: rgba(0, 0, 0, 0.693);
-}
-
-.feed .post {
-    margin-top: 1rem;
-    font-size: 1rem;
-}
-
-.feed .post .post-title {
-    padding-top: 10px;
-    font-size: 18px;
-    text-transform: uppercase;
-}
-.feed .post p {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    font-size: 14px;
-}
-
-.feed-footer {
-    display: flex;
-    justify-content: right;
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
-}
-
-.feed-footer small {
-    cursor: pointer;
 }
 
 #overlay {
@@ -543,6 +577,30 @@ img {
     border:  0.1rem solid #000000;             
     outline: none;               
 }
+
+.error {
+    border: 0.1rem solid red !important; /* Thin red border */
+}
+
+.shake {
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-5px);
+    }
+    50% {
+        transform: translateX(5px);
+    }
+    75% {
+        transform: translateX(-5px);
+    }
+}
+
 
 .answer-content:focus {
     background-color: transparent; 
