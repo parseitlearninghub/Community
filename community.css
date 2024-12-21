@@ -299,6 +299,7 @@ img {
     justify-content: right;
     margin-top: 1rem;
     margin-bottom: 0.5rem;
+    visibility: visible;
 }
 
 .feed-footer small {
@@ -536,7 +537,11 @@ img {
     min-width: fit-content;
     width: auto;
     display: inline-block; 
-    margin-bottom: 0.5rem;
+}
+
+.text_reply {
+    font-size: 12px;
+    cursor: pointer;
 }
 
 .answers-close-button {

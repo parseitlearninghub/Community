@@ -150,9 +150,9 @@ function submitQuery(username, time, description, post_id, student_id) {
   });
 }
 
-function loadPosts() {
+// Function to load posts
+function loadPosts() { 
   const postsRef = ref(database, `PARSEIT/community/posts/`);
-  const currentUserId = studentId;
   const currentUsername = localStorage.getItem("student_username");
 
   get(postsRef)
@@ -219,7 +219,7 @@ function loadPosts() {
           document.getElementById(answerId).addEventListener("click", () => openAnswersModal(postElement, postId));
         });
 
-        checkLongContent();  // Check if any post content is long after loading the posts
+        checkLongContent(); // Check if any post content is long after loading the posts
       } else {
         console.log("No posts available.");
       }
@@ -230,8 +230,7 @@ function loadPosts() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  const student_id = studentId;
-  loadPosts(student_id);
+  loadPosts();
 });
 
 function toggleViewMore(feedElement) {
@@ -245,14 +244,13 @@ function toggleViewMore(feedElement) {
   }
 }
 
-
 // Function to check and show "View More" if content is too long
 function checkLongContent() {
   const feedItems = document.querySelectorAll('.feed');
   feedItems.forEach(feed => {
     const postDescription = feed.querySelector('.post p');
     const viewMoreLink = feed.querySelector('.view-more');
-    
+
     if (postDescription.scrollHeight > postDescription.offsetHeight) {
       viewMoreLink.classList.add('show'); // Show "View More" if content is too long
       viewMoreLink.addEventListener('click', () => toggleViewMore(feed));
@@ -262,16 +260,17 @@ function checkLongContent() {
   });
 }
 
+
 // Event listener for each "View More" link
-document.addEventListener('DOMContentLoaded', function() {
-  checkLongContent(); // Check for long content when the page loads
-  document.querySelectorAll('.view-more').forEach(link => {
-    link.addEventListener('click', (e) => {
-      const feedElement = e.target.closest('.feed');
-      toggleViewMore(feedElement);
-    });
-  });
-});
+// document.addEventListener('DOMContentLoaded', function() {
+//   checkLongContent(); // Check for long content when the page loads
+//   document.querySelectorAll('.view-more').forEach(link => {
+//     link.addEventListener('click', (e) => {
+//       const feedElement = e.target.closest('.feed');
+//       toggleViewMore(feedElement);
+//     });
+//   });
+// });
 
 // The function to post a comment (answer) to the correct post in Firebase
 function postComment(student_id, username, content) {
@@ -332,13 +331,13 @@ function loadAnswers(postId) {
     .then((snapshot) => {
       const modalBody = document.querySelector(".answer-modal-body");
       modalBody.innerHTML = ""; // Clear previous answers
+      const answerTextarea = document.getElementById("newComment");
+      const postAnswerBtn = document.getElementById("answer_btn");
 
       if (snapshot.exists()) {
         const answers = snapshot.val();
         Object.keys(answers).forEach((answerId) => {
           const answer = answers[answerId];
-
-          // Format the time using the timeAgo function
           const formattedTime = timeAgo(answer.time);
 
           const answerElement = document.createElement("div");
@@ -347,9 +346,52 @@ function loadAnswers(postId) {
             <div class="answer-header">
               <strong>${answer.username}</strong> <small>${formattedTime}</small>
             </div>
-            <p class="community-answers">${answer.content}</p>
+            <div>
+              <p class="community-answers" data-answer-id="${answerId}" data-username="${answer.username}">
+                ${answer.content}
+              </p>
+            </div>
+            <small class="text_reply">Reply</small>
           `;
+
+          // Append to modal body
           modalBody.appendChild(answerElement);
+
+          // Add event listener for community-answers
+          const communityAnswer = answerElement.querySelector(".community-answers");
+          communityAnswer.addEventListener("click", (e) => {
+            const currentUser = "currentUserName"; // Replace this with logic to get the current user's username
+            const isUserOwnAnswer = e.target.dataset.username === currentUser;
+
+            if (isUserOwnAnswer) {
+              // Populate textarea with the current answer for editing
+              answerTextarea.value = e.target.textContent;
+              answerTextarea.focus();
+              postAnswerBtn.dataset.editAnswerId = e.target.dataset.answerId; // Set answer ID for the update
+            } else {
+              alert("You can only edit your own answers.");
+            }
+          });
+        });
+
+        // Add click listener to the post-answer-btn for editing
+        postAnswerBtn.addEventListener("click", () => {
+          const editAnswerId = postAnswerBtn.dataset.editAnswerId;
+          if (editAnswerId) {
+            const updatedContent = answerTextarea.value.trim();
+            if (updatedContent) {
+              const answerRef = ref(database, `PARSEIT/community/posts/${postId}/answers/${editAnswerId}`);
+              update(answerRef, { content: updatedContent }).then(() => {
+                // Clear textarea and reset button state
+                answerTextarea.value = "";
+                delete postAnswerBtn.dataset.editAnswerId;
+                // Reload answers to reflect the updated content
+                loadAnswers(postId);
+              });
+            } else {
+              alert("Answer content cannot be empty.");
+            }
+          }
         });
       } else {
         modalBody.innerHTML = "<p>No answers yet. Be the first to answer!</p>";
@@ -359,6 +401,8 @@ function loadAnswers(postId) {
       console.error("Error loading answers:", error);
     });
 }
+
+
 
 async function getUsername(student_id) {
   const postsRef = ref(database, `PARSEIT/username/`);
@@ -395,10 +439,10 @@ function timeAgo(timestamp) {
   if (seconds < 60) return "Just now";
 
   const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+  if (minutes < 60) return `${minutes} min${minutes > 1 ? "s" : ""} ago`;
 
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  if (hours < 24) return `${hours} hr${hours > 1 ? "s" : ""} ago`;
 
   const days = Math.floor(hours / 24);
   if (days < 30) return `${days} day${days > 1 ? "s" : ""} ago`;
