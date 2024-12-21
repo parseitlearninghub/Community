@@ -360,7 +360,7 @@ function loadAnswers(postId) {
           // Add event listener for community-answers
           const communityAnswer = answerElement.querySelector(".community-answers");
           communityAnswer.addEventListener("click", (e) => {
-            const currentUser = "currentUserName"; // Replace this with logic to get the current user's username
+            const currentUser = username; // Replace this with logic to get the current user's username
             const isUserOwnAnswer = e.target.dataset.username === currentUser;
 
             if (isUserOwnAnswer) {
