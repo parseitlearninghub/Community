@@ -264,7 +264,6 @@ function checkLongContent() {
   });
 }
 
-
 // Event listener for each "View More" link
 document.addEventListener('DOMContentLoaded', function() {
   checkLongContent(); // Check for long content when the page loads
@@ -324,37 +323,6 @@ function addAnswer() {
 }
 
 // Function to load answers for the active post
-// Helper function to calculate relative time
-function timeAgo(timestamp) {
-  // Ensure the timestamp is a valid number
-  const timestampNumber = Number(timestamp);
-  if (isNaN(timestampNumber)) {
-      return "Invalid time";
-  }
-
-  const now = Date.now(); // Current time in milliseconds
-  const difference = now - timestampNumber; // Difference in milliseconds
-
-  const seconds = Math.floor(difference / 1000);
-  if (seconds < 60) return "Just now";
-
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-
-  const days = Math.floor(hours / 24);
-  if (days < 30) return `${days} day${days > 1 ? "s" : ""} ago`;
-
-  const months = Math.floor(days / 30);
-  if (months < 12) return `${months} month${months > 1 ? "s" : ""} ago`;
-
-  const years = Math.floor(months / 12);
-  return `${years} year${years > 1 ? "s" : ""} ago`;
-}
-
-// Updated loadAnswers function
 function loadAnswers(postId) {
   if (!postId) {
     console.error("No active post ID found.");
@@ -412,6 +380,36 @@ async function getUsername(student_id) {
       })
     }
   });
+}
+
+// Helper function to calculate relative time
+function timeAgo(timestamp) {
+  // Ensure the timestamp is a valid number
+  const timestampNumber = Number(timestamp);
+  if (isNaN(timestampNumber)) {
+      return "Invalid time";
+  }
+
+  const now = Date.now(); // Current time in milliseconds
+  const difference = now - timestampNumber; // Difference in milliseconds
+
+  const seconds = Math.floor(difference / 1000);
+  if (seconds < 60) return "Just now";
+
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days} day${days > 1 ? "s" : ""} ago`;
+
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months} month${months > 1 ? "s" : ""} ago`;
+
+  const years = Math.floor(months / 12);
+  return `${years} year${years > 1 ? "s" : ""} ago`;
 }
 
 function getCurrentTime() {
@@ -561,7 +559,6 @@ function editPost(postId) {
       console.error("Error fetching post:", error);
     });
 }
-
 
 // Report Post Functionality
 function reportPost(postId) {
