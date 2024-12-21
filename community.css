@@ -652,9 +652,11 @@ img {
 }
 
 .post-answer-btn, .message_send_btn img {
-    width: 24px; 
-    height: 24px; 
+    width: 18px; 
+    height: 18px; 
     transition: transform 0.2s ease-in-out;
+    filter: invert(23%) sepia(100%) saturate(500%) hue-rotate(-50deg);
+    
 }
 
 .post-answer-btn, .message_send_btn:hover img {
