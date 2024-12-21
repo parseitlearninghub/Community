@@ -325,7 +325,7 @@ function loadAnswers(postId) {
     console.error("No active post ID found.");
     return;
   }
-
+  const currentUsername = localStorage.getItem("student_username");
   const answersRef = ref(database, `PARSEIT/community/posts/${postId}/answers/`);
   get(answersRef)
     .then((snapshot) => {
@@ -360,7 +360,7 @@ function loadAnswers(postId) {
           // Add event listener for community-answers
           const communityAnswer = answerElement.querySelector(".community-answers");
           communityAnswer.addEventListener("click", (e) => {
-            const currentUser = username; // Replace this with logic to get the current user's username
+            const currentUser = currentUsername; // Replace this with logic to get the current user's username
             const isUserOwnAnswer = e.target.dataset.username === currentUser;
 
             if (isUserOwnAnswer) {
