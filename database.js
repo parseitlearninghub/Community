@@ -41,6 +41,7 @@ document.getElementById("postbtn").addEventListener("click", function() {
   overlay.classList.add("active");
   queryModal.classList.add("active");
   document.getElementById('queryDescription').value = '';
+  document.getElementById('post_query_btn').textContent = "Post Query";
 });
 // open the answer section
 function openAnswersModal(feedElement, postId) {
@@ -542,7 +543,7 @@ function editPost(postId) {
             });
 
           // Restore the original button state after editing
-          newPostButton.textContent = "Post Query";
+          // newPostButton.textContent = "Post Query";
           newPostButton.replaceWith(newPostButton.cloneNode(true)); // Remove edit listener
         });
 
