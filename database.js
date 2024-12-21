@@ -35,15 +35,14 @@ document.getElementById("community_home_btn").addEventListener("click", function
   location.reload();
 });
 
-
-//executed when clicking the have a question div
+//executed when clicking the "Have a question?" div
 document.getElementById("postbtn").addEventListener("click", function() {
   overlay.classList.add("active");
   queryModal.classList.add("active");
   document.getElementById('queryDescription').value = '';
   document.getElementById('post_query_btn').textContent = "Post Query";
 });
-// open the answer section
+//to open the answer section
 function openAnswersModal(feedElement, postId) {
   localStorage.setItem("active_post_id", postId);
   overlay.classList.add("active");
@@ -51,22 +50,21 @@ function openAnswersModal(feedElement, postId) {
   activeFeed = feedElement; 
   loadAnswers(postId);
 }
-//close the answer section
+//to close the answer section
 document.getElementById("close_answermodal").addEventListener("click", function() {
   overlay.classList.remove("active");
   answersModal.classList.remove("active");
   activeFeed = null;
 });
 
-// to close the post query section
+// to close the "Post Your Query" section
 function closeModal() {
   overlay.classList.remove("active");
   queryModal.classList.remove("active");
 }
-
 document.getElementById("close_btn").addEventListener("click", closeModal);
 
-// Consolidated toggle logic
+// Consolidated toggle logic - to read
 function toggleSection(buttonId, sectionId) {
   const icons = document.querySelectorAll('.header_icons div');
   const sections = document.querySelectorAll('.section');
@@ -79,24 +77,24 @@ function toggleSection(buttonId, sectionId) {
   document.getElementById(buttonId).classList.add('active');
   document.getElementById(sectionId).classList.add('active');
 }
-
+// - to read
 function setupToggleEvent(buttonId, sectionId) {
   document.getElementById(buttonId).addEventListener('click', () => {
     toggleSection(buttonId, sectionId);
   });
 }
-
+// - to read
 setupToggleEvent('notification_btn', 'notif_page_section');
 setupToggleEvent('messages_page_btn', 'messages_page_section');
 setupToggleEvent('community_home_btn', 'community_home_section');
-
+//to get display the username
 const username = localStorage.getItem("student_username");
 if (username) {
     document.getElementById('username-placeholder').textContent = username;
 } else {
   document.getElementById('username-placeholder').textContent = "Parser";
 }
-
+// - to read
 async function getParser(student_id) {
   const postsRef = ref(database, `PARSEIT/username/`);
 

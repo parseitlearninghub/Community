@@ -120,6 +120,11 @@ img {
     filter: brightness(0) saturate(100%) sepia(100%) hue-rotate(-10deg) brightness(1.2) contrast(1.1);
     border-bottom: 3px solid red;
 }
+/* 
+.icon-labels {
+    color: red;
+    font-size: 10px;
+} */
 
 .header_icons button {
     background: none;
@@ -294,7 +299,6 @@ img {
     justify-content: right;
     margin-top: 1rem;
     margin-bottom: 0.5rem;
-    border: 1px solid red;
 }
 
 .feed-footer small {
